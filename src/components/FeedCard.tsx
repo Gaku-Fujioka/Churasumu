@@ -1,4 +1,4 @@
-import { localizeText } from '../data/translations.ts'
+import { localizeFeedType, localizeText } from '../data/translations.ts'
 import { useLocale } from '../hooks/useLocale.ts'
 import type { FeedPost } from '../types/domain.ts'
 
@@ -9,7 +9,7 @@ export function FeedCard({ post }: { post: FeedPost }) {
     <article className="mini-card">
       <div className="mini-card--row">
         <strong>{localizeText(post.title, locale)}</strong>
-        <span className="badge badge--neutral">{post.type}</span>
+        <span className="badge badge--neutral">{localizeFeedType(post.type, locale)}</span>
       </div>
       <p>{localizeText(post.description, locale)}</p>
       <p>

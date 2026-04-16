@@ -14,7 +14,7 @@ export function QuestionsPage() {
 
   return (
     <div className="page-grid">
-      <SectionCard title={t('communityQuestions')} description="Post a question and review replies from current residents.">
+      <SectionCard title={t('communityQuestions')} description={t('communityQuestionsDescription')}>
         <form
           className="stack"
           onSubmit={(event) => {
@@ -27,11 +27,11 @@ export function QuestionsPage() {
               {
                 id: crypto.randomUUID(),
                 authorId: 'current-user',
-                authorName: 'You',
+                authorName: locale === 'ja' ? 'あなた' : 'You',
                 title: { ja: title, en: title },
                 body: { ja: body, en: body },
-                tags: ['new'],
-                createdAt: 'now',
+                tags: [locale === 'ja' ? '新着' : 'new'],
+                createdAt: locale === 'ja' ? 'たった今' : 'now',
                 solved: false,
                 replies: [],
               },
@@ -46,7 +46,7 @@ export function QuestionsPage() {
             <input value={title} onChange={(event) => setTitle(event.target.value)} />
           </label>
           <label className="field">
-            <span>Detail</span>
+            <span>{t('communityQuestionDetail')}</span>
             <textarea rows={4} value={body} onChange={(event) => setBody(event.target.value)} />
           </label>
           <button type="submit">{t('postQuestion')}</button>

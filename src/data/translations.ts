@@ -9,6 +9,7 @@ export const messages = {
   navStay: { ja: '滞在管理', en: 'Stay' },
   navChat: { ja: 'AIチャット', en: 'AI Chat' },
   navCommunity: { ja: 'コミュニティ', en: 'Community' },
+  navMigration: { ja: '移住導線', en: 'Migration' },
   navAdmin: { ja: '管理画面', en: 'Admin' },
   logout: { ja: 'ログアウト', en: 'Log out' },
   loggedOut: { ja: '未ログイン', en: 'Logged out' },
@@ -97,6 +98,60 @@ export const messages = {
   postReview: { ja: 'レビューを投稿', en: 'Post review' },
   languageJa: { ja: '日本語', en: 'Japanese' },
   languageEn: { ja: '英語', en: 'English' },
+  migrationHubTitle: { ja: '移住ハブ', en: 'Migration hub' },
+  migrationHubDescription: {
+    ja: '相談予約、購入シミュレーター、お気に入り物件、長期賃貸切替、生活サポート情報をまとめて確認できます。',
+    en: 'Access consultations, purchase simulation, favorite properties, rental switch, and support resources in one place.',
+  },
+  migrationConsultation: { ja: '移住相談予約', en: 'Consultation booking' },
+  migrationSimulator: { ja: '物件購入シミュレーター', en: 'Purchase simulator' },
+  migrationFavorites: { ja: 'お気に入り物件', en: 'Favorite properties' },
+  migrationRentalSwitch: { ja: '長期賃貸切替申請', en: 'Rental switch request' },
+  migrationSupport: { ja: '移住後サポート情報', en: 'Support information' },
+  migrationGo: { ja: '移住導線へ進む', en: 'Go to migration flow' },
+  migrationPropertyPurchasePrice: { ja: '参考購入価格', en: 'Reference purchase price' },
+  migrationMonthlyMortgage: { ja: '想定月額返済', en: 'Estimated monthly mortgage' },
+  migrationDownPaymentRatio: { ja: '頭金比率', en: 'Down payment ratio' },
+  migrationConsultationSubmit: { ja: '相談予約を送信', en: 'Submit consultation request' },
+  migrationRentalSwitchSubmit: { ja: '切替申請を送信', en: 'Submit rental switch request' },
+  migrationFavoriteEmpty: { ja: '保存済みの物件はまだありません。', en: 'No saved properties yet.' },
+  migrationAdminSection: { ja: '移住リード管理', en: 'Migration leads' },
+  communityQuestionStatusOpen: { ja: '受付中', en: 'Open' },
+  communityQuestionStatusSolved: { ja: '解決済み', en: 'Solved' },
+  communityQuestionDetail: { ja: '詳細', en: 'Detail' },
+  communitySuggestedMatch: { ja: 'おすすめマッチ', en: 'Suggested match' },
+  communityResidentDescription: {
+    ja: '興味関心や滞在スタイルから近い滞在者を探せます。',
+    en: 'Find residents with similar interests and stay styles.',
+  },
+  communityQuestionsDescription: {
+    ja: '質問を投稿し、滞在者からの回答を確認できます。',
+    en: 'Post questions and review replies from current residents.',
+  },
+  communityFeedDescription: {
+    ja: 'カテゴリで地域情報を絞り込めます。',
+    en: 'Filter local updates by category.',
+  },
+  migrationConsultationDescription: {
+    ja: '相談テーマや希望エリアを指定して、移住相談を予約できます。',
+    en: 'Book a relocation consultation with your topic and preferred area.',
+  },
+  migrationSimulatorDescription: {
+    ja: '簡単な入力から月額返済や総支払額を試算します。',
+    en: 'Estimate monthly mortgage and total payment from simple inputs.',
+  },
+  migrationFavoritesDescription: {
+    ja: 'あとで見返したい物件を保存・解除できます。',
+    en: 'Save or remove properties you want to revisit later.',
+  },
+  migrationRentalSwitchDescription: {
+    ja: '中期滞在から長期賃貸へ切り替えるための申請です。',
+    en: 'Submit a request to move from medium-stay into long-term rental.',
+  },
+  migrationSupportDescription: {
+    ja: '沖縄移住後に役立つ行政・学校・医療・交通情報を確認できます。',
+    en: 'Browse key administration, school, medical, and transport information after moving.',
+  },
 } as const
 
 export type TranslationKey = keyof typeof messages
@@ -107,4 +162,83 @@ export function translate(locale: AppLocale, key: TranslationKey) {
 
 export function localizeText(text: LocalizedText, locale: AppLocale) {
   return text[locale]
+}
+
+const enumTranslations = {
+  features: {
+    '家具家電付き': { ja: '家具家電付き', en: 'Furnished' },
+    '空港アクセス良好': { ja: '空港アクセス良好', en: 'Good airport access' },
+    '高速Wi-Fi': { ja: '高速Wi-Fi', en: 'High-speed Wi-Fi' },
+    '静かな住環境': { ja: '静かな住環境', en: 'Quiet neighborhood' },
+    'ファミリー向け': { ja: 'ファミリー向け', en: 'Family friendly' },
+    '駐車場あり': { ja: '駐車場あり', en: 'Parking available' },
+    'コワーキング近接': { ja: 'コワーキング近接', en: 'Near coworking spaces' },
+    'コミュニティイベント': { ja: 'コミュニティイベント', en: 'Community events' },
+    '広めのデスク': { ja: '広めのデスク', en: 'Large desk' },
+    'ビーチ徒歩圏内': { ja: 'ビーチ徒歩圏内', en: 'Walkable to the beach' },
+    '外国人サポート': { ja: '外国人サポート', en: 'International support' },
+    '英語対応可': { ja: '英語対応可', en: 'English support available' },
+    '長期滞在向け': { ja: '長期滞在向け', en: 'Great for long stays' },
+    '収納充実': { ja: '収納充実', en: 'Plenty of storage' },
+    '静音環境': { ja: '静音環境', en: 'Quiet interior' },
+  },
+  feedTypes: {
+    event: { ja: 'イベント', en: 'Event' },
+    food: { ja: '飲食', en: 'Food' },
+    coworking: { ja: 'コワーキング', en: 'Coworking' },
+    news: { ja: 'ニュース', en: 'News' },
+  },
+  workStyles: {
+    remote: { ja: 'リモート', en: 'Remote' },
+    hybrid: { ja: 'ハイブリッド', en: 'Hybrid' },
+    explorer: { ja: '探索型', en: 'Explorer' },
+  },
+  consultationTopics: {
+    area: { ja: 'エリア相談', en: 'Area fit' },
+    school: { ja: '学校相談', en: 'Schooling' },
+    housing: { ja: '住まい相談', en: 'Housing' },
+    work: { ja: '仕事相談', en: 'Work' },
+    procedures: { ja: '手続き相談', en: 'Procedures' },
+  },
+  yesNo: {
+    yes: { ja: 'あり', en: 'Yes' },
+    no: { ja: 'なし', en: 'No' },
+  },
+} as const
+
+export function localizeFeature(feature: string, locale: AppLocale) {
+  return enumTranslations.features[feature as keyof typeof enumTranslations.features]?.[locale] ?? feature
+}
+
+export function localizeFeedType(type: keyof typeof enumTranslations.feedTypes, locale: AppLocale) {
+  return enumTranslations.feedTypes[type][locale]
+}
+
+export function localizeWorkStyle(style: keyof typeof enumTranslations.workStyles, locale: AppLocale) {
+  return enumTranslations.workStyles[style][locale]
+}
+
+export function localizeConsultationTopic(
+  topic: keyof typeof enumTranslations.consultationTopics,
+  locale: AppLocale,
+) {
+  return enumTranslations.consultationTopics[topic][locale]
+}
+
+export function localizeYesNo(value: boolean, locale: AppLocale) {
+  return value ? enumTranslations.yesNo.yes[locale] : enumTranslations.yesNo.no[locale]
+}
+
+export function localizeRequestStatus(status: string, locale: AppLocale) {
+  const labels: Record<string, { ja: string; en: string }> = {
+    requested: { ja: '受付済み', en: 'Requested' },
+    confirmed: { ja: '確定', en: 'Confirmed' },
+    completed: { ja: '完了', en: 'Completed' },
+    draft: { ja: '下書き', en: 'Draft' },
+    submitted: { ja: '送信済み', en: 'Submitted' },
+    reviewing: { ja: '確認中', en: 'Reviewing' },
+    approved: { ja: '承認済み', en: 'Approved' },
+  }
+
+  return labels[status]?.[locale] ?? status
 }

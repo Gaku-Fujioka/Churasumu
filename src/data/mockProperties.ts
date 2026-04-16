@@ -12,6 +12,9 @@ export const mockProperties: Property[] = [
     idealFor: ['nomad', 'international'],
     languageSupport: ['ja', 'en'],
     communityScore: 72,
+    purchasePrice: 24800000,
+    expectedMonthlyMortgage: 71600,
+    supportHighlights: ['空港アクセス', '短期移住体験', '都市部生活'],
   },
   {
     id: 'prop-naha-garden',
@@ -24,6 +27,9 @@ export const mockProperties: Property[] = [
     idealFor: ['migrant'],
     languageSupport: ['ja'],
     communityScore: 60,
+    purchasePrice: 29800000,
+    expectedMonthlyMortgage: 86100,
+    supportHighlights: ['子育て環境', '落ち着いた住宅街', '生活施設'],
   },
   {
     id: 'prop-okinawa-city',
@@ -36,6 +42,9 @@ export const mockProperties: Property[] = [
     idealFor: ['nomad'],
     languageSupport: ['ja', 'en'],
     communityScore: 88,
+    purchasePrice: 21900000,
+    expectedMonthlyMortgage: 63200,
+    supportHighlights: ['コワーキング近接', '交流機会', '通勤しやすさ'],
   },
   {
     id: 'prop-chatan-seaside',
@@ -48,6 +57,9 @@ export const mockProperties: Property[] = [
     idealFor: ['international', 'nomad'],
     languageSupport: ['ja', 'en'],
     communityScore: 81,
+    purchasePrice: 33800000,
+    expectedMonthlyMortgage: 97600,
+    supportHighlights: ['英語対応', '海辺暮らし', '国際的な雰囲気'],
   },
   {
     id: 'prop-chatan-hills',
@@ -60,5 +72,8 @@ export const mockProperties: Property[] = [
     idealFor: ['migrant', 'international'],
     languageSupport: ['ja', 'en'],
     communityScore: 65,
+    purchasePrice: 31500000,
+    expectedMonthlyMortgage: 91000,
+    supportHighlights: ['長期定住向け', '収納力', '静かな住環境'],
   },
 ]

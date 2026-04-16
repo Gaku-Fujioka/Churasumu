@@ -15,12 +15,12 @@ export function ResidentListPage() {
 
   return (
     <div className="page-grid">
-      <SectionCard title={t('communityResidents')} description="Interests and stay style help surface simple resident matches.">
+      <SectionCard title={t('communityResidents')} description={t('communityResidentDescription')}>
         <div className="support-grid">
           {residents.map((resident) => (
             <div key={resident.id} className="stack">
               <ResidentCard resident={resident} />
-              {resident.isSuggested ? <p className="inline-note">Suggested match</p> : null}
+              {resident.isSuggested ? <p className="inline-note">{t('communitySuggestedMatch')}</p> : null}
             </div>
           ))}
         </div>

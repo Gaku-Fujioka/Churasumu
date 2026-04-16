@@ -11,6 +11,7 @@ export function AppHeader() {
     { to: '/stay', label: t('navStay') },
     { to: '/chat', label: t('navChat') },
     { to: '/community', label: t('navCommunity') },
+    { to: '/migration', label: t('navMigration') },
   ]
 
   return (

@@ -11,6 +11,12 @@ import { ResidentListPage } from './pages/community/ResidentListPage.tsx'
 import { ReviewsPage } from './pages/community/ReviewsPage.tsx'
 import { WorkSpotsPage } from './pages/community/WorkSpotsPage.tsx'
 import { LoginPage } from './pages/LoginPage.tsx'
+import { ConsultationPage } from './pages/migration/ConsultationPage.tsx'
+import { FavoritePropertiesPage } from './pages/migration/FavoritePropertiesPage.tsx'
+import { MigrationHubPage } from './pages/migration/MigrationHubPage.tsx'
+import { PurchaseSimulatorPage } from './pages/migration/PurchaseSimulatorPage.tsx'
+import { RentalSwitchPage } from './pages/migration/RentalSwitchPage.tsx'
+import { SupportInfoPage } from './pages/migration/SupportInfoPage.tsx'
 import { OnboardingPage } from './pages/onboarding/OnboardingPage.tsx'
 import { ChatbotPage } from './pages/stay/ChatbotPage.tsx'
 import { StayDashboardPage } from './pages/stay/StayDashboardPage.tsx'
@@ -45,6 +51,12 @@ function App() {
           <Route path="/community/coupons" element={<CouponsPage />} />
           <Route path="/community/reviews" element={<ReviewsPage />} />
           <Route path="/community/work-spots" element={<WorkSpotsPage />} />
+          <Route path="/migration" element={<MigrationHubPage />} />
+          <Route path="/migration/consultation" element={<ConsultationPage />} />
+          <Route path="/migration/simulator" element={<PurchaseSimulatorPage />} />
+          <Route path="/migration/favorites" element={<FavoritePropertiesPage />} />
+          <Route path="/migration/rental-switch" element={<RentalSwitchPage />} />
+          <Route path="/migration/support" element={<SupportInfoPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
         </Route>
       </Route>

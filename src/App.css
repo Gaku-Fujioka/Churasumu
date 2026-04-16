@@ -107,6 +107,18 @@ button:hover,
   background: var(--bg);
 }
 
+.mini-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100%;
+}
+
+.mini-card .nav-link {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
 .question-title,
 .metric {
   margin: 0;

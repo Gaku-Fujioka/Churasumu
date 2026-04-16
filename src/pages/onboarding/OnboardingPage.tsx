@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { PropertyCard } from '../../components/PropertyCard.tsx'
 import { SectionCard } from '../../components/SectionCard.tsx'
 import { StatusBadge } from '../../components/StatusBadge.tsx'
+import { mockFavoriteProperties } from '../../data/mockFavoriteProperties.ts'
 import { localizeText } from '../../data/translations.ts'
 import { mockOptions, recommendationQuestions } from '../../data/mockPlans.ts'
 import { useAuth } from '../../hooks/useAuth.ts'
@@ -14,6 +17,9 @@ export function OnboardingPage() {
   const { locale, t } = useLocale()
   const [answers, setAnswers] = useState<AnswerMap>({})
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([])
+  const [favoritePropertyIds, setFavoritePropertyIds] = useState<string[]>(
+    mockFavoriteProperties.map((item) => item.propertyId),
+  )
   const [isCheckoutComplete, setIsCheckoutComplete] = useState(false)
   const [hasViewedContract, setHasViewedContract] = useState(false)
   const { recommendedPlan, rankedPlans, suggestedOptions, recommendedProperties, explanations } =
@@ -117,19 +123,18 @@ export function OnboardingPage() {
               <strong>{t('onboardingSuggestedProperties')}</strong>
               <div className="support-grid">
                 {recommendedProperties.map((property) => (
-                  <div key={property.id} className="mini-card">
-                    <strong>{property.name}</strong>
-                    <p>
-                      {property.city} / ¥{property.monthlyRent.toLocaleString()}
-                    </p>
-                    <div className="tag-row">
-                      {property.features.map((feature) => (
-                        <span key={feature} className="info-tag">
-                          {feature}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    saved={favoritePropertyIds.includes(property.id)}
+                    onToggleSave={(propertyId) =>
+                      setFavoritePropertyIds((current) =>
+                        current.includes(propertyId)
+                          ? current.filter((id) => id !== propertyId)
+                          : [...current, propertyId],
+                      )
+                    }
+                  />
                 ))}
               </div>
             </div>
@@ -183,6 +188,9 @@ export function OnboardingPage() {
             </div>
 
             <div className="action-row">
+              <Link className="nav-link" to="/migration">
+                {t('migrationGo')}
+              </Link>
               <button type="button" onClick={() => setHasViewedContract(true)}>
                 {t('onboardingContract')}
               </button>

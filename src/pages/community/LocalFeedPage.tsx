@@ -16,16 +16,16 @@ export function LocalFeedPage() {
 
   return (
     <div className="page-grid">
-      <SectionCard title={t('communityFeed')} description="Filter local updates by category.">
+      <SectionCard title={t('communityFeed')} description={t('communityFeedDescription')}>
         <FilterBar
           value={filter}
           onChange={setFilter}
           options={[
-            { value: 'all', label: 'All' },
-            { value: 'event', label: 'Event' },
-            { value: 'food', label: 'Food' },
-            { value: 'coworking', label: 'Coworking' },
-            { value: 'news', label: 'News' },
+            { value: 'all', label: t('viewDetails') === '詳細を見る' ? 'すべて' : 'All' },
+            { value: 'event', label: t('viewDetails') === '詳細を見る' ? 'イベント' : 'Event' },
+            { value: 'food', label: t('viewDetails') === '詳細を見る' ? '飲食' : 'Food' },
+            { value: 'coworking', label: t('viewDetails') === '詳細を見る' ? 'コワーキング' : 'Coworking' },
+            { value: 'news', label: t('viewDetails') === '詳細を見る' ? 'ニュース' : 'News' },
           ]}
         />
         <div className="stack">

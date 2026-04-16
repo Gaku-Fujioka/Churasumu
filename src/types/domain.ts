@@ -7,6 +7,9 @@ export type CommunityCategory = 'residents' | 'questions' | 'feed' | 'coupons' |
 export type FeedType = 'event' | 'food' | 'coworking' | 'news'
 export type CouponCategory = 'food' | 'activity' | 'coworking' | 'living'
 export type ReviewTargetType = 'property' | 'shop' | 'workSpot'
+export type ConsultationTopic = 'area' | 'school' | 'housing' | 'work' | 'procedures'
+export type RentalSwitchStatus = 'draft' | 'submitted' | 'reviewing' | 'approved'
+export type SupportCategory = 'administration' | 'school' | 'hospital' | 'transport'
 
 export interface LocalizedText {
   ja: string
@@ -34,6 +37,9 @@ export interface Property {
   idealFor?: UserPersona[]
   languageSupport?: AppLocale[]
   communityScore?: number
+  purchasePrice?: number
+  expectedMonthlyMortgage?: number
+  supportHighlights?: string[]
 }
 
 export interface PlanOption {
@@ -189,4 +195,50 @@ export interface WorkSpot {
   hours: string
   tags: string[]
   note: LocalizedText
+}
+
+export interface MigrationConsultationRequest {
+  id: string
+  userName: string
+  topic: ConsultationTopic
+  preferredDate: string
+  preferredArea: string
+  note: string
+  status: 'requested' | 'confirmed' | 'completed'
+}
+
+export interface PurchaseSimulationInput {
+  propertyPrice: number
+  downPayment: number
+  interestRate: number
+  loanYears: number
+}
+
+export interface PurchaseSimulationResult {
+  monthlyPayment: number
+  totalPayment: number
+  loanAmount: number
+  downPaymentRatio: number
+}
+
+export interface FavoriteProperty {
+  propertyId: string
+  savedAt: string
+}
+
+export interface RentalSwitchRequest {
+  id: string
+  userName: string
+  desiredStart: string
+  preferredArea: string
+  note: string
+  status: RentalSwitchStatus
+}
+
+export interface SupportArticle {
+  id: string
+  category: SupportCategory
+  title: LocalizedText
+  summary: LocalizedText
+  contact: string
 }
