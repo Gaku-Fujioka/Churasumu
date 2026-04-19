@@ -1,5 +1,5 @@
 export type UserRole = 'guest' | 'resident' | 'admin'
-export type AppLocale = 'ja' | 'en'
+export type AppLocale = 'ja' | 'en' | 'zh' | 'ko'
 
 export type UserPersona = 'migrant' | 'nomad' | 'international'
 export type WorkStyle = 'remote' | 'hybrid' | 'explorer'
@@ -14,6 +14,8 @@ export type SupportCategory = 'administration' | 'school' | 'hospital' | 'transp
 export interface LocalizedText {
   ja: string
   en: string
+  zh?: string
+  ko?: string
 }
 
 export interface MockUser {

@@ -1,4 +1,5 @@
 import type { AppLocale, LocalizedText } from '../types/domain.ts'
+import { messageTranslationsKo, messageTranslationsZh } from './messageLocaleZhKo.ts'
 
 export const messages = {
   appTagline: {
@@ -175,99 +176,176 @@ export const messages = {
 export type TranslationKey = keyof typeof messages
 
 export function translate(locale: AppLocale, key: TranslationKey) {
-  return messages[key][locale]
+  const row = messages[key] as { ja: string; en: string }
+  if (locale === 'ja') {
+    return row.ja
+  }
+  if (locale === 'en') {
+    return row.en
+  }
+  if (locale === 'zh') {
+    return messageTranslationsZh[key] ?? row.en
+  }
+  if (locale === 'ko') {
+    return messageTranslationsKo[key] ?? row.en
+  }
+  return row.en
 }
 
 export function localizeText(text: LocalizedText, locale: AppLocale) {
-  return text[locale]
+  switch (locale) {
+    case 'ja':
+      return text.ja
+    case 'en':
+      return text.en
+    case 'zh':
+      return text.zh ?? text.en
+    case 'ko':
+      return text.ko ?? text.en
+    default:
+      return text.en
+  }
 }
 
 const enumTranslations = {
   features: {
-    '家具家電付き': { ja: '家具家電付き', en: 'Furnished' },
-    '空港アクセス良好': { ja: '空港アクセス良好', en: 'Good airport access' },
-    '高速Wi-Fi': { ja: '高速Wi-Fi', en: 'High-speed Wi-Fi' },
-    '静かな住環境': { ja: '静かな住環境', en: 'Quiet neighborhood' },
-    'ファミリー向け': { ja: 'ファミリー向け', en: 'Family friendly' },
-    '駐車場あり': { ja: '駐車場あり', en: 'Parking available' },
-    'コワーキング近接': { ja: 'コワーキング近接', en: 'Near coworking spaces' },
-    'コミュニティイベント': { ja: 'コミュニティイベント', en: 'Community events' },
-    '広めのデスク': { ja: '広めのデスク', en: 'Large desk' },
-    'ビーチ徒歩圏内': { ja: 'ビーチ徒歩圏内', en: 'Walkable to the beach' },
-    '外国人サポート': { ja: '外国人サポート', en: 'International support' },
-    '英語対応可': { ja: '英語対応可', en: 'English support available' },
-    '長期滞在向け': { ja: '長期滞在向け', en: 'Great for long stays' },
-    '収納充実': { ja: '収納充実', en: 'Plenty of storage' },
-    '静音環境': { ja: '静音環境', en: 'Quiet interior' },
+    '家具家電付き': { ja: '家具家電付き', en: 'Furnished', zh: '含家具家电', ko: '가구·가전 포함' },
+    '空港アクセス良好': { ja: '空港アクセス良好', en: 'Good airport access', zh: '机场交通便利', ko: '공항 접근성 좋음' },
+    '高速Wi-Fi': { ja: '高速Wi-Fi', en: 'High-speed Wi-Fi', zh: '高速 Wi‑Fi', ko: '고속 Wi‑Fi' },
+    '静かな住環境': { ja: '静かな住環境', en: 'Quiet neighborhood', zh: '安静居住环境', ko: '조용한 주거 환경' },
+    'ファミリー向け': { ja: 'ファミリー向け', en: 'Family friendly', zh: '适合家庭', ko: '가족 친화' },
+    '駐車場あり': { ja: '駐車場あり', en: 'Parking available', zh: '有停车位', ko: '주차 가능' },
+    'コワーキング近接': { ja: 'コワーキング近接', en: 'Near coworking spaces', zh: '靠近联合办公', ko: '코워킹 근접' },
+    'コミュニティイベント': { ja: 'コミュニティイベント', en: 'Community events', zh: '社区活动', ko: '커뮤니티 이벤트' },
+    '広めのデスク': { ja: '広めのデスク', en: 'Large desk', zh: '宽大书桌', ko: '넓은 책상' },
+    'ビーチ徒歩圏内': { ja: 'ビーチ徒歩圏内', en: 'Walkable to the beach', zh: '步行可达海滩', ko: '해변 도보권' },
+    '外国人サポート': { ja: '外国人サポート', en: 'International support', zh: '外籍人士支持', ko: '외국인 지원' },
+    '英語対応可': { ja: '英語対応可', en: 'English support available', zh: '可提供英语服务', ko: '영어 대응 가능' },
+    '長期滞在向け': { ja: '長期滞在向け', en: 'Great for long stays', zh: '适合长期停留', ko: '장기 체류에 적합' },
+    '収納充実': { ja: '収納充実', en: 'Plenty of storage', zh: '收纳充足', ko: '수납 충분' },
+    '静音環境': { ja: '静音環境', en: 'Quiet interior', zh: '静音环境', ko: '저소음 실내' },
   },
   feedTypes: {
-    event: { ja: 'イベント', en: 'Event' },
-    food: { ja: '飲食', en: 'Food' },
-    coworking: { ja: 'コワーキング', en: 'Coworking' },
-    news: { ja: 'ニュース', en: 'News' },
+    event: { ja: 'イベント', en: 'Event', zh: '活动', ko: '이벤트' },
+    food: { ja: '飲食', en: 'Food', zh: '餐饮', ko: '음식' },
+    coworking: { ja: 'コワーキング', en: 'Coworking', zh: '联合办公', ko: '코워킹' },
+    news: { ja: 'ニュース', en: 'News', zh: '资讯', ko: '뉴스' },
   },
   workStyles: {
-    remote: { ja: 'リモート', en: 'Remote' },
-    hybrid: { ja: 'ハイブリッド', en: 'Hybrid' },
-    explorer: { ja: '探索型', en: 'Explorer' },
+    remote: { ja: 'リモート', en: 'Remote', zh: '远程', ko: '원격' },
+    hybrid: { ja: 'ハイブリッド', en: 'Hybrid', zh: '混合', ko: '하이브리드' },
+    explorer: { ja: '探索型', en: 'Explorer', zh: '探索型', ko: '탐험형' },
   },
   consultationTopics: {
-    area: { ja: 'エリア相談', en: 'Area fit' },
-    school: { ja: '学校相談', en: 'Schooling' },
-    housing: { ja: '住まい相談', en: 'Housing' },
-    work: { ja: '仕事相談', en: 'Work' },
-    procedures: { ja: '手続き相談', en: 'Procedures' },
+    area: { ja: 'エリア相談', en: 'Area fit', zh: '区域咨询', ko: '지역 상담' },
+    school: { ja: '学校相談', en: 'Schooling', zh: '学校咨询', ko: '학교 상담' },
+    housing: { ja: '住まい相談', en: 'Housing', zh: '住房咨询', ko: '주거 상담' },
+    work: { ja: '仕事相談', en: 'Work', zh: '工作咨询', ko: '일 상담' },
+    procedures: { ja: '手続き相談', en: 'Procedures', zh: '手续咨询', ko: '절차 상담' },
   },
   yesNo: {
-    yes: { ja: 'あり', en: 'Yes' },
-    no: { ja: 'なし', en: 'No' },
+    yes: { ja: 'あり', en: 'Yes', zh: '有', ko: '있음' },
+    no: { ja: 'なし', en: 'No', zh: '无', ko: '없음' },
   },
 } as const
 
 export function localizeFeature(feature: string, locale: AppLocale) {
-  return enumTranslations.features[feature as keyof typeof enumTranslations.features]?.[locale] ?? feature
+  const row = enumTranslations.features[feature as keyof typeof enumTranslations.features]
+  if (!row) {
+    return feature
+  }
+  return (row as Record<AppLocale, string | undefined>)[locale] ?? row.en ?? feature
 }
 
 export function localizeFeedType(type: keyof typeof enumTranslations.feedTypes, locale: AppLocale) {
-  return enumTranslations.feedTypes[type][locale]
+  const row = enumTranslations.feedTypes[type]
+  return (row as Record<AppLocale, string | undefined>)[locale] ?? row.en
 }
 
 export function localizeWorkStyle(style: keyof typeof enumTranslations.workStyles, locale: AppLocale) {
-  return enumTranslations.workStyles[style][locale]
+  const row = enumTranslations.workStyles[style]
+  return (row as Record<AppLocale, string | undefined>)[locale] ?? row.en
 }
 
 export function localizeConsultationTopic(
   topic: keyof typeof enumTranslations.consultationTopics,
   locale: AppLocale,
 ) {
-  return enumTranslations.consultationTopics[topic][locale]
+  const row = enumTranslations.consultationTopics[topic]
+  return (row as Record<AppLocale, string | undefined>)[locale] ?? row.en
 }
 
 export function localizeYesNo(value: boolean, locale: AppLocale) {
-  return value ? enumTranslations.yesNo.yes[locale] : enumTranslations.yesNo.no[locale]
+  const row = value ? enumTranslations.yesNo.yes : enumTranslations.yesNo.no
+  return (row as Record<AppLocale, string | undefined>)[locale] ?? row.en
 }
 
 export function localizeRequestStatus(status: string, locale: AppLocale) {
-  const labels: Record<string, { ja: string; en: string }> = {
-    requested: { ja: '受付済み', en: 'Requested' },
-    confirmed: { ja: '確定', en: 'Confirmed' },
-    completed: { ja: '完了', en: 'Completed' },
-    draft: { ja: '下書き', en: 'Draft' },
-    submitted: { ja: '送信済み', en: 'Submitted' },
-    reviewing: { ja: '確認中', en: 'Reviewing' },
-    approved: { ja: '承認済み', en: 'Approved' },
+  const labels: Record<string, Record<AppLocale, string>> = {
+    requested: { ja: '受付済み', en: 'Requested', zh: '已受理', ko: '접수됨' },
+    confirmed: { ja: '確定', en: 'Confirmed', zh: '已确定', ko: '확정' },
+    completed: { ja: '完了', en: 'Completed', zh: '已完成', ko: '완료' },
+    draft: { ja: '下書き', en: 'Draft', zh: '草稿', ko: '초안' },
+    submitted: { ja: '送信済み', en: 'Submitted', zh: '已提交', ko: '제출됨' },
+    reviewing: { ja: '確認中', en: 'Reviewing', zh: '审核中', ko: '검토 중' },
+    approved: { ja: '承認済み', en: 'Approved', zh: '已批准', ko: '승인됨' },
   }
 
-  return labels[status]?.[locale] ?? status
+  const row = labels[status]
+  return row ? (row[locale] ?? row.en) : status
+}
+
+const recommendationTagTranslations: Record<string, Record<AppLocale, string>> = {
+  移住準備: { ja: '移住準備', en: 'Relocation prep', zh: '移居准备', ko: '이주 준비' },
+  生活検証: { ja: '生活検証', en: 'Life validation', zh: '生活验证', ko: '생활 검증' },
+  ワーケーション: { ja: 'ワーケーション', en: 'Workation', zh: '工作度假', ko: '워케이션' },
+  働きやすさ: { ja: '働きやすさ', en: 'Work-friendly', zh: '易于工作', ko: '일하기 좋음' },
+  サポート重視: { ja: 'サポート重視', en: 'Support-focused', zh: '重视支持', ko: '지원 중시' },
+  短期滞在: { ja: '短期滞在', en: 'Short stay', zh: '短期停留', ko: '단기 체류' },
+  標準滞在: { ja: '標準滞在', en: 'Standard stay', zh: '标准停留', ko: '표준 체류' },
+  長期滞在: { ja: '長期滞在', en: 'Long stay', zh: '长期停留', ko: '장기 체류' },
+  通信環境: { ja: '通信環境', en: 'Connectivity', zh: '网络环境', ko: '통신 환경' },
+  地域交流: { ja: '地域交流', en: 'Local exchange', zh: '社区交流', ko: '지역 교류' },
+  英語対応: { ja: '英語対応', en: 'English-ready', zh: '支持英语', ko: '영어 대응' },
+}
+
+const personaTagTranslations: Record<string, Record<AppLocale, string>> = {
+  nomad: { ja: 'ノマド向け', en: 'Suits digital nomads', zh: '适合数字游民', ko: '디지털 노마드에 적합' },
+  migrant: { ja: '移住検討向け', en: 'For future migrants', zh: '适合移居考虑者', ko: '이주 검토자에 적합' },
+  international: { ja: '外国人滞在向け', en: 'For international stays', zh: '适合外籍人士', ko: '외국인 체류자에 적합' },
+  resident: { ja: '現地住民向け', en: 'For local residents', zh: '适合本地住户', ko: '현지 주민에 적합' },
+}
+
+const localeTagTranslations: Record<AppLocale, Record<AppLocale, string>> = {
+  ja: { ja: '日本語対応', en: 'Japanese support', zh: '支持日语', ko: '일본어 대응' },
+  en: { ja: '英語対応', en: 'English support', zh: '支持英语', ko: '영어 대응' },
+  zh: { ja: '中国語対応', en: 'Chinese support', zh: '支持中文', ko: '중국어 대응' },
+  ko: { ja: '韓国語対応', en: 'Korean support', zh: '支持韩语', ko: '한국어 대응' },
+}
+
+export function localizeRecommendationReason(reason: string, locale: AppLocale) {
+  if (reason.startsWith('persona:')) {
+    const key = reason.slice('persona:'.length)
+    const row = personaTagTranslations[key]
+    return row ? (row[locale] ?? row.en) : reason
+  }
+  if (reason.startsWith('locale:')) {
+    const key = reason.slice('locale:'.length) as AppLocale
+    const row = localeTagTranslations[key]
+    return row ? (row[locale] ?? row.en) : reason
+  }
+  const row = recommendationTagTranslations[reason]
+  return row ? (row[locale] ?? row.en) : reason
 }
 
 /** 管理画面トラブル報告の対応ステータス（内部値は new / in_progress / resolved のまま） */
 export function localizeTroubleReportStatus(status: string, locale: AppLocale) {
-  const labels: Record<string, { ja: string; en: string }> = {
-    new: { ja: '新規', en: 'New' },
-    in_progress: { ja: '対応中', en: 'In progress' },
-    resolved: { ja: '完了', en: 'Resolved' },
+  const labels: Record<string, Record<AppLocale, string>> = {
+    new: { ja: '新規', en: 'New', zh: '新建', ko: '신규' },
+    in_progress: { ja: '対応中', en: 'In progress', zh: '处理中', ko: '처리 중' },
+    resolved: { ja: '完了', en: 'Resolved', zh: '已完成', ko: '완료' },
   }
 
-  return labels[status]?.[locale] ?? status
+  const row = labels[status]
+  return row ? (row[locale] ?? row.en) : status
 }

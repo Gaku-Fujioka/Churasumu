@@ -4,12 +4,13 @@ import { PropertyCard } from '../../components/PropertyCard.tsx'
 import { SectionCard } from '../../components/SectionCard.tsx'
 import { StatusBadge } from '../../components/StatusBadge.tsx'
 import { mockFavoriteProperties } from '../../data/mockFavoriteProperties.ts'
-import { localizeText } from '../../data/translations.ts'
+import { localizeRecommendationReason, localizeText } from '../../data/translations.ts'
 import { mockOptions, mockPlans, recommendationQuestions } from '../../data/mockPlans.ts'
 import { useAuth } from '../../hooks/useAuth.ts'
 import { useEnrollment } from '../../hooks/useEnrollment.ts'
 import { useLocale } from '../../hooks/useLocale.ts'
 import { usePlanRecommendation } from '../../hooks/usePlanRecommendation.ts'
+import { pickUi } from '../../lib/pickUi.ts'
 import type { EnrollmentSnapshot } from '../../types/enrollment.ts'
 
 type AnswerMap = Record<string, string>
@@ -153,7 +154,13 @@ export function OnboardingPage() {
                         {localizeText(plan.name, locale)} / {localizeText(plan.stayRange, locale)}
                       </span>
                       <span className="plan-pick-meta">
-                        ¥{plan.monthlyPrice.toLocaleString()} / {locale === 'ja' ? '診断スコア' : 'Quiz score'} {score}
+                        ¥{plan.monthlyPrice.toLocaleString()} / {pickUi(locale, {
+                          ja: '診断スコア',
+                          en: 'Quiz score',
+                          zh: '问卷得分',
+                          ko: '설문 점수',
+                        })}{' '}
+                        {score}
                       </span>
                     </button>
                   )
@@ -224,7 +231,7 @@ export function OnboardingPage() {
             <div className="tag-row">
               {explanations.map((reason) => (
                 <span key={reason} className="info-tag">
-                  {reason}
+                  {localizeRecommendationReason(reason, locale)}
                 </span>
               ))}
             </div>

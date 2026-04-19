@@ -4,6 +4,7 @@ import { SectionCard } from '../../components/SectionCard.tsx'
 import { localizeText } from '../../data/translations.ts'
 import { mockQuestions } from '../../data/mockQuestions.ts'
 import { useLocale } from '../../hooks/useLocale.ts'
+import { pickUi } from '../../lib/pickUi.ts'
 import type { QuestionPost } from '../../types/domain.ts'
 
 export function QuestionsPage() {
@@ -27,11 +28,11 @@ export function QuestionsPage() {
               {
                 id: crypto.randomUUID(),
                 authorId: 'current-user',
-                authorName: locale === 'ja' ? 'あなた' : 'You',
+                authorName: pickUi(locale, { ja: 'あなた', en: 'You', zh: '您', ko: '나' }),
                 title: { ja: title, en: title },
                 body: { ja: body, en: body },
-                tags: [locale === 'ja' ? '新着' : 'new'],
-                createdAt: locale === 'ja' ? 'たった今' : 'now',
+                tags: [pickUi(locale, { ja: '新着', en: 'new', zh: '最新', ko: '신규' })],
+                createdAt: pickUi(locale, { ja: 'たった今', en: 'now', zh: '刚刚', ko: '방금' }),
                 solved: false,
                 replies: [],
               },

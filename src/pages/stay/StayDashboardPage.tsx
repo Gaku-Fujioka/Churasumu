@@ -7,6 +7,7 @@ import { localizeText } from '../../data/translations.ts'
 import { useAuth } from '../../hooks/useAuth.ts'
 import { useEnrollment } from '../../hooks/useEnrollment.ts'
 import { useLocale } from '../../hooks/useLocale.ts'
+import { pickUi } from '../../lib/pickUi.ts'
 
 export function StayDashboardPage() {
   const { locale, t } = useLocale()
@@ -52,10 +53,13 @@ export function StayDashboardPage() {
 
   const extensionLabel = useMemo(
     () =>
-      t('languageJa') === '日本語'
-        ? `延長後の想定退去日: 2026/05/${16 + extensionDays}`
-        : `Estimated move-out after extension: 2026/05/${16 + extensionDays}`,
-    [extensionDays, t],
+      pickUi(locale, {
+        ja: `延長後の想定退去日: 2026/05/${16 + extensionDays}`,
+        en: `Estimated move-out after extension: 2026/05/${16 + extensionDays}`,
+        zh: `延长后的预计退租日：2026/05/${16 + extensionDays}`,
+        ko: `연장 후 예상 퇴거일: 2026/05/${16 + extensionDays}`,
+      }),
+    [extensionDays, locale],
   )
 
   return (
@@ -98,37 +102,61 @@ export function StayDashboardPage() {
       <SectionCard title={t('staySummaryTitle')} description={t('staySummaryDescription')}>
         <div className="stack">
           <div className="summary-box">
-            <p>{t('languageJa') === '日本語' ? `物件名: ${currentProperty.name}` : `Property: ${currentProperty.name}`}</p>
-            <p>{t('languageJa') === '日本語' ? `滞在期間: ${stayPeriod}` : `Stay period: ${stayPeriod}`}</p>
-            <p>{t('languageJa') === '日本語' ? `エリア: ${currentProperty.city}` : `Area: ${currentProperty.city}`}</p>
+            <p>
+              {pickUi(locale, {
+                ja: `物件名: ${currentProperty.name}`,
+                en: `Property: ${currentProperty.name}`,
+                zh: `房源名称：${currentProperty.name}`,
+                ko: `매물명: ${currentProperty.name}`,
+              })}
+            </p>
+            <p>
+              {pickUi(locale, {
+                ja: `滞在期間: ${stayPeriod}`,
+                en: `Stay period: ${stayPeriod}`,
+                zh: `停留期间：${stayPeriod}`,
+                ko: `체류 기간: ${stayPeriod}`,
+              })}
+            </p>
+            <p>
+              {pickUi(locale, {
+                ja: `エリア: ${currentProperty.city}`,
+                en: `Area: ${currentProperty.city}`,
+                zh: `区域：${currentProperty.city}`,
+                ko: `지역: ${currentProperty.city}`,
+              })}
+            </p>
           </div>
 
           <div className="action-row">
             <button type="button" onClick={() => setIsLocked((current) => !current)}>
-              {t('languageJa') === '日本語'
-                ? isLocked
-                  ? 'スマートロックを解錠'
-                  : 'スマートロックを施錠'
-                : isLocked
-                  ? 'Unlock smart lock'
-                  : 'Lock smart lock'}
+              {pickUi(locale, {
+                ja: isLocked ? 'スマートロックを解錠' : 'スマートロックを施錠',
+                en: isLocked ? 'Unlock smart lock' : 'Lock smart lock',
+                zh: isLocked ? '智能门锁解锁' : '智能门锁上锁',
+                ko: isLocked ? '스마트락 잠금 해제' : '스마트락 잠금',
+              })}
             </button>
             <StatusBadge
-              label={
-                t('languageJa') === '日本語'
-                  ? isLocked
-                    ? '現在は施錠中'
-                    : '現在は解錠中'
-                  : isLocked
-                    ? 'Locked now'
-                    : 'Unlocked now'
-              }
+              label={pickUi(locale, {
+                ja: isLocked ? '現在は施錠中' : '現在は解錠中',
+                en: isLocked ? 'Locked now' : 'Unlocked now',
+                zh: isLocked ? '当前已上锁' : '当前已解锁',
+                ko: isLocked ? '현재 잠김' : '현재 열림',
+              })}
               tone={isLocked ? 'neutral' : 'success'}
             />
           </div>
 
           <label className="field">
-            <span>{t('languageJa') === '日本語' ? '延長希望日数' : 'Extension days'}</span>
+            <span>
+              {pickUi(locale, {
+                ja: '延長希望日数',
+                en: 'Extension days',
+                zh: '希望延长天数',
+                ko: '연장 희망 일수',
+              })}
+            </span>
             <input
               type="number"
               min={1}
@@ -141,10 +169,7 @@ export function StayDashboardPage() {
         </div>
       </SectionCard>
 
-      <SectionCard
-        title={t('troubleReportTitle')}
-        description={t('troubleReportDescription')}
-      >
+      <SectionCard title={t('troubleReportTitle')} description={t('troubleReportDescription')}>
         <form
           className="stack"
           onSubmit={(event) => {
@@ -153,27 +178,41 @@ export function StayDashboardPage() {
           }}
         >
           <label className="field">
-            <span>{t('languageJa') === '日本語' ? 'タイトル' : 'Title'}</span>
+            <span>
+              {pickUi(locale, { ja: 'タイトル', en: 'Title', zh: '标题', ko: '제목' })}
+            </span>
             <input value={reportTitle} onChange={(event) => setReportTitle(event.target.value)} />
           </label>
 
           <label className="field">
-            <span>{t('languageJa') === '日本語' ? 'カテゴリ' : 'Category'}</span>
+            <span>
+              {pickUi(locale, { ja: 'カテゴリ', en: 'Category', zh: '类别', ko: '분류' })}
+            </span>
             <select value={reportCategory} onChange={(event) => setReportCategory(event.target.value)}>
               <option value="wifi">Wi-Fi</option>
-              <option value="facility">{t('languageJa') === '日本語' ? '設備' : 'Facility'}</option>
-              <option value="cleaning">{t('languageJa') === '日本語' ? '清掃' : 'Cleaning'}</option>
-              <option value="other">{t('languageJa') === '日本語' ? 'その他' : 'Other'}</option>
+              <option value="facility">
+                {pickUi(locale, { ja: '設備', en: 'Facility', zh: '设备', ko: '시설' })}
+              </option>
+              <option value="cleaning">
+                {pickUi(locale, { ja: '清掃', en: 'Cleaning', zh: '清洁', ko: '청소' })}
+              </option>
+              <option value="other">
+                {pickUi(locale, { ja: 'その他', en: 'Other', zh: '其他', ko: '기타' })}
+              </option>
             </select>
           </label>
 
           <label className="field">
-            <span>{t('languageJa') === '日本語' ? '内容' : 'Details'}</span>
+            <span>
+              {pickUi(locale, { ja: '内容', en: 'Details', zh: '内容', ko: '내용' })}
+            </span>
             <textarea value={reportDetail} onChange={(event) => setReportDetail(event.target.value)} rows={4} />
           </label>
 
           <label className="field">
-            <span>{t('languageJa') === '日本語' ? '写真アップロード' : 'Photo upload'}</span>
+            <span>
+              {pickUi(locale, { ja: '写真アップロード', en: 'Photo upload', zh: '上传照片', ko: '사진 업로드' })}
+            </span>
             <input
               type="file"
               onChange={(event) => setUploadedFileName(event.target.files?.[0]?.name ?? '')}
@@ -182,17 +221,27 @@ export function StayDashboardPage() {
 
           {uploadedFileName ? (
             <p className="inline-note">
-              {t('languageJa') === '日本語' ? `選択中のファイル: ${uploadedFileName}` : `Selected file: ${uploadedFileName}`}
+              {pickUi(locale, {
+                ja: `選択中のファイル: ${uploadedFileName}`,
+                en: `Selected file: ${uploadedFileName}`,
+                zh: `已选文件：${uploadedFileName}`,
+                ko: `선택한 파일: ${uploadedFileName}`,
+              })}
             </p>
           ) : null}
 
-          <button type="submit">{t('languageJa') === '日本語' ? '報告を送信' : 'Submit report'}</button>
+          <button type="submit">
+            {pickUi(locale, { ja: '報告を送信', en: 'Submit report', zh: '提交报告', ko: '보고 보내기' })}
+          </button>
 
           {reportSubmitted ? (
             <p className="inline-note">
-              {t('languageJa') === '日本語'
-                ? `送信済み: ${reportTitle || '未入力タイトル'} / ${reportCategory} / ${reportDetail || '詳細未入力'}`
-                : `Submitted: ${reportTitle || 'Untitled'} / ${reportCategory} / ${reportDetail || 'No details'}`}
+              {pickUi(locale, {
+                ja: `送信済み: ${reportTitle || '未入力タイトル'} / ${reportCategory} / ${reportDetail || '詳細未入力'}`,
+                en: `Submitted: ${reportTitle || 'Untitled'} / ${reportCategory} / ${reportDetail || 'No details'}`,
+                zh: `已提交：${reportTitle || '无标题'} / ${reportCategory} / ${reportDetail || '无详情'}`,
+                ko: `제출됨: ${reportTitle || '제목 없음'} / ${reportCategory} / ${reportDetail || '내용 없음'}`,
+              })}
             </p>
           ) : null}
         </form>
@@ -202,42 +251,94 @@ export function StayDashboardPage() {
         <div className="stack">
           <div className="support-grid">
             <div className="mini-card">
-              <strong>{t('languageJa') === '日本語' ? '清掃リクエスト' : 'Cleaning request'}</strong>
-              <p>{t('languageJa') === '日本語' ? '週次清掃や追加清掃を依頼できます。' : 'Request routine or extra cleaning.'}</p>
+              <strong>
+                {pickUi(locale, { ja: '清掃リクエスト', en: 'Cleaning request', zh: '清扫请求', ko: '청소 요청' })}
+              </strong>
+              <p>
+                {pickUi(locale, {
+                  ja: '週次清掃や追加清掃を依頼できます。',
+                  en: 'Request routine or extra cleaning.',
+                  zh: '可委托定期或额外清扫。',
+                  ko: '정기 또는 추가 청소를 요청할 수 있습니다.',
+                })}
+              </p>
               <button type="button" onClick={() => setCleaningRequested(true)}>
-                {t('languageJa') === '日本語' ? '清掃を依頼' : 'Request cleaning'}
+                {pickUi(locale, { ja: '清掃を依頼', en: 'Request cleaning', zh: '申请清扫', ko: '청소 요청' })}
               </button>
             </div>
             <div className="mini-card">
-              <strong>{t('languageJa') === '日本語' ? '設備情報' : 'Facility info'}</strong>
-              <p>{t('languageJa') === '日本語' ? 'Wi-Fi、ゴミ出し、エアコン操作方法を確認できます。' : 'Check Wi-Fi, trash rules, and AC guidance.'}</p>
+              <strong>
+                {pickUi(locale, { ja: '設備情報', en: 'Facility info', zh: '设备信息', ko: '시설 정보' })}
+              </strong>
+              <p>
+                {pickUi(locale, {
+                  ja: 'Wi-Fi、ゴミ出し、エアコン操作方法を確認できます。',
+                  en: 'Check Wi-Fi, trash rules, and AC guidance.',
+                  zh: '可查看 Wi‑Fi、垃圾投放与空调使用说明。',
+                  ko: 'Wi‑Fi, 쓰레기, 에어컨 사용 안내를 확인할 수 있습니다.',
+                })}
+              </p>
               <ul className="plain-list">
                 <li>Wi-Fi: Churasumu-Guest</li>
-                <li>{t('languageJa') === '日本語' ? 'ゴミ出し: 火曜・金曜' : 'Trash: Tue / Fri'}</li>
-                <li>{t('languageJa') === '日本語' ? '駐車場: 1台まで利用可' : 'Parking: 1 car available'}</li>
+                <li>
+                  {pickUi(locale, {
+                    ja: 'ゴミ出し: 火曜・金曜',
+                    en: 'Trash: Tue / Fri',
+                    zh: '垃圾投放：周二、周五',
+                    ko: '쓰레기: 화·금',
+                  })}
+                </li>
+                <li>
+                  {pickUi(locale, {
+                    ja: '駐車場: 1台まで利用可',
+                    en: 'Parking: 1 car available',
+                    zh: '停车位：最多 1 辆',
+                    ko: '주차: 1대까지',
+                  })}
+                </li>
               </ul>
             </div>
             <div className="mini-card">
-              <strong>{t('languageJa') === '日本語' ? '緊急連絡' : 'Emergency contact'}</strong>
-              <p>{t('languageJa') === '日本語' ? '24時間サポート窓口への案内です。' : '24/7 support hotline guidance.'}</p>
+              <strong>
+                {pickUi(locale, { ja: '緊急連絡', en: 'Emergency contact', zh: '紧急联系', ko: '긴급 연락' })}
+              </strong>
+              <p>
+                {pickUi(locale, {
+                  ja: '24時間サポート窓口への案内です。',
+                  en: '24/7 support hotline guidance.',
+                  zh: '24 小时支持热线指引。',
+                  ko: '24시간 지원 안내입니다.',
+                })}
+              </p>
               <button type="button" className="danger-button" onClick={() => setEmergencyClicked(true)}>
-                {t('languageJa') === '日本語' ? '緊急連絡を見る' : 'View emergency contact'}
+                {pickUi(locale, {
+                  ja: '緊急連絡を見る',
+                  en: 'View emergency contact',
+                  zh: '查看紧急联系方式',
+                  ko: '긴급 연락처 보기',
+                })}
               </button>
             </div>
           </div>
 
           {cleaningRequested ? (
             <p className="inline-note">
-              {t('languageJa') === '日本語'
-                ? '清掃依頼を受け付けました。翌営業日に調整連絡します。'
-                : 'Cleaning request received. We will coordinate on the next business day.'}
+              {pickUi(locale, {
+                ja: '清掃依頼を受け付けました。翌営業日に調整連絡します。',
+                en: 'Cleaning request received. We will coordinate on the next business day.',
+                zh: '已受理清扫请求。将于下一工作日联系协调。',
+                ko: '청소 요청을 접수했습니다. 다음 영업일에 조율 연락을 드립니다.',
+              })}
             </p>
           ) : null}
           {emergencyClicked ? (
             <p className="inline-note">
-              {t('languageJa') === '日本語'
-                ? '緊急時連絡先: 098-000-1190 / 夜間は管理会社へ転送されます。'
-                : 'Emergency contact: 098-000-1190 / night calls forward to property management.'}
+              {pickUi(locale, {
+                ja: '緊急時連絡先: 098-000-1190 / 夜間は管理会社へ転送されます。',
+                en: 'Emergency contact: 098-000-1190 / night calls forward to property management.',
+                zh: '紧急联系电话：098-000-1190 / 夜间将转接至管理公司。',
+                ko: '긴급 연락처: 098-000-1190 / 야간에는 관리사로 연결됩니다.',
+              })}
             </p>
           ) : null}
         </div>
