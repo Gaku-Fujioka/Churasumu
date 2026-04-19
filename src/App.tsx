@@ -34,30 +34,47 @@ function RequireAuth() {
   )
 }
 
+function HomeRedirect() {
+  const { currentUser } = useAuth()
+  return <Navigate to={currentUser?.role === 'admin' ? '/admin' : '/onboarding'} replace />
+}
+
+function ResidentOnly() {
+  const { currentUser } = useAuth()
+
+  if (currentUser?.role === 'admin') {
+    return <Navigate to="/admin" replace />
+  }
+
+  return <Outlet />
+}
+
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<Navigate to="/onboarding" replace />} />
-          <Route path="/onboarding" element={<OnboardingPage />} />
-          <Route path="/stay" element={<StayDashboardPage />} />
-          <Route path="/chat" element={<ChatbotPage />} />
-          <Route path="/community" element={<CommunityHubPage />} />
-          <Route path="/community/residents" element={<ResidentListPage />} />
-          <Route path="/community/questions" element={<QuestionsPage />} />
-          <Route path="/community/feed" element={<LocalFeedPage />} />
-          <Route path="/community/coupons" element={<CouponsPage />} />
-          <Route path="/community/reviews" element={<ReviewsPage />} />
-          <Route path="/community/work-spots" element={<WorkSpotsPage />} />
-          <Route path="/migration" element={<MigrationHubPage />} />
-          <Route path="/migration/consultation" element={<ConsultationPage />} />
-          <Route path="/migration/simulator" element={<PurchaseSimulatorPage />} />
-          <Route path="/migration/favorites" element={<FavoritePropertiesPage />} />
-          <Route path="/migration/rental-switch" element={<RentalSwitchPage />} />
-          <Route path="/migration/support" element={<SupportInfoPage />} />
+          <Route path="/" element={<HomeRedirect />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route element={<ResidentOnly />}>
+            <Route path="/onboarding" element={<OnboardingPage />} />
+            <Route path="/stay" element={<StayDashboardPage />} />
+            <Route path="/chat" element={<ChatbotPage />} />
+            <Route path="/community" element={<CommunityHubPage />} />
+            <Route path="/community/residents" element={<ResidentListPage />} />
+            <Route path="/community/questions" element={<QuestionsPage />} />
+            <Route path="/community/feed" element={<LocalFeedPage />} />
+            <Route path="/community/coupons" element={<CouponsPage />} />
+            <Route path="/community/reviews" element={<ReviewsPage />} />
+            <Route path="/community/work-spots" element={<WorkSpotsPage />} />
+            <Route path="/migration" element={<MigrationHubPage />} />
+            <Route path="/migration/consultation" element={<ConsultationPage />} />
+            <Route path="/migration/simulator" element={<PurchaseSimulatorPage />} />
+            <Route path="/migration/favorites" element={<FavoritePropertiesPage />} />
+            <Route path="/migration/rental-switch" element={<RentalSwitchPage />} />
+            <Route path="/migration/support" element={<SupportInfoPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

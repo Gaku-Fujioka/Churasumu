@@ -4,7 +4,11 @@ import { SectionCard } from '../../components/SectionCard.tsx'
 import { StatusBadge } from '../../components/StatusBadge.tsx'
 import { initialTroubleReports, leads, mockBookings, salesSummary } from '../../data/mockAdmin.ts'
 import { mockMigrationConsultations } from '../../data/mockMigrationConsultations.ts'
-import { localizeConsultationTopic, localizeRequestStatus } from '../../data/translations.ts'
+import {
+  localizeConsultationTopic,
+  localizeRequestStatus,
+  localizeTroubleReportStatus,
+} from '../../data/translations.ts'
 import { useAuth } from '../../hooks/useAuth.ts'
 import { useLocale } from '../../hooks/useLocale.ts'
 import { mockProperties } from '../../data/mockProperties.ts'
@@ -95,7 +99,7 @@ export function AdminDashboardPage() {
               </div>
               <div className="action-row">
                 <StatusBadge
-                  label={report.status}
+                  label={localizeTroubleReportStatus(report.status, locale)}
                   tone={report.status === 'resolved' ? 'success' : report.status === 'in_progress' ? 'warning' : 'neutral'}
                 />
                 <select
@@ -109,10 +113,11 @@ export function AdminDashboardPage() {
                       ),
                     )
                   }
+                  aria-label={locale === 'ja' ? '対応ステータス' : 'Response status'}
                 >
-                  <option value="new">new</option>
-                  <option value="in_progress">in_progress</option>
-                  <option value="resolved">resolved</option>
+                  <option value="new">{localizeTroubleReportStatus('new', locale)}</option>
+                  <option value="in_progress">{localizeTroubleReportStatus('in_progress', locale)}</option>
+                  <option value="resolved">{localizeTroubleReportStatus('resolved', locale)}</option>
                 </select>
               </div>
             </div>

@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth.ts'
 export function AppHeader() {
   const { currentUser, logout } = useAuth()
   const { locale, setLocale, t } = useLocale()
-  const canViewAdmin = currentUser?.role === 'admin'
+  const isAdmin = currentUser?.role === 'admin'
   const residentLinks = [
     { to: '/onboarding', label: t('navOnboarding') },
     { to: '/stay', label: t('navStay') },
@@ -16,29 +16,33 @@ export function AppHeader() {
 
   return (
     <header className="app-header">
-      <div>
+      <div className="app-header__brand">
         <p className="eyebrow">{t('appTagline')}</p>
         <h1>Churasumu</h1>
       </div>
 
-      <nav className="app-nav" aria-label="Main navigation">
-        {residentLinks.map((link) => (
-          <NavLink
-            key={link.to}
-            to={link.to}
-            className={({ isActive }) => (isActive ? 'nav-link nav-link--active' : 'nav-link')}
-          >
-            {link.label}
-          </NavLink>
-        ))}
-        {canViewAdmin ? (
+      <nav
+        className="app-nav"
+        aria-label={isAdmin ? 'Administrator navigation' : 'Main navigation'}
+      >
+        {isAdmin ? (
           <NavLink
             to="/admin"
             className={({ isActive }) => (isActive ? 'nav-link nav-link--active' : 'nav-link')}
           >
             {t('navAdmin')}
           </NavLink>
-        ) : null}
+        ) : (
+          residentLinks.map((link) => (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              className={({ isActive }) => (isActive ? 'nav-link nav-link--active' : 'nav-link')}
+            >
+              {link.label}
+            </NavLink>
+          ))
+        )}
       </nav>
 
       <div className="app-header__meta">
@@ -50,7 +54,9 @@ export function AppHeader() {
             {t('languageEn')}
           </button>
         </div>
-        <p>{currentUser ? `${currentUser.name} / ${currentUser.stayPurpose}` : t('loggedOut')}</p>
+        <p className="app-header__user-line">
+          {currentUser ? `${currentUser.name} / ${currentUser.stayPurpose}` : t('loggedOut')}
+        </p>
         <button type="button" className="ghost-button" onClick={logout}>
           {t('logout')}
         </button>
