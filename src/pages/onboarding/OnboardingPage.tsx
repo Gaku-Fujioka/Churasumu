@@ -1,51 +1,79 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PropertyCard } from '../../components/PropertyCard.tsx'
 import { SectionCard } from '../../components/SectionCard.tsx'
 import { StatusBadge } from '../../components/StatusBadge.tsx'
 import { mockFavoriteProperties } from '../../data/mockFavoriteProperties.ts'
 import { localizeText } from '../../data/translations.ts'
-import { mockOptions, recommendationQuestions } from '../../data/mockPlans.ts'
+import { mockOptions, mockPlans, recommendationQuestions } from '../../data/mockPlans.ts'
 import { useAuth } from '../../hooks/useAuth.ts'
+import { useEnrollment } from '../../hooks/useEnrollment.ts'
 import { useLocale } from '../../hooks/useLocale.ts'
 import { usePlanRecommendation } from '../../hooks/usePlanRecommendation.ts'
+import type { EnrollmentSnapshot } from '../../types/enrollment.ts'
 
 type AnswerMap = Record<string, string>
 
 export function OnboardingPage() {
   const { currentUser } = useAuth()
+  const { snapshot, patchSnapshot } = useEnrollment()
   const { locale, t } = useLocale()
   const [answers, setAnswers] = useState<AnswerMap>({})
-  const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>([])
   const [favoritePropertyIds, setFavoritePropertyIds] = useState<string[]>(
     mockFavoriteProperties.map((item) => item.propertyId),
   )
-  const [isCheckoutComplete, setIsCheckoutComplete] = useState(false)
-  const [hasViewedContract, setHasViewedContract] = useState(false)
-  const { recommendedPlan, rankedPlans, suggestedOptions, recommendedProperties, explanations } =
-    usePlanRecommendation(answers, currentUser)
+
+  const selectedPlanIdForHook = snapshot?.selectedPlanId ? snapshot.selectedPlanId : null
+  const { recommendedPlan, activePlan, rankedPlans, suggestedOptions, recommendedProperties, explanations } =
+    usePlanRecommendation(answers, currentUser, selectedPlanIdForHook)
 
   const allQuestionsAnswered = recommendationQuestions.every((question) => answers[question.id])
 
+  const suggestedOptionsKey = useMemo(() => suggestedOptions.map((option) => option.id).join(','), [suggestedOptions])
+
+  useEffect(() => {
+    if (!allQuestionsAnswered || !snapshot) {
+      return
+    }
+    const updates: Partial<EnrollmentSnapshot> = {}
+    if (!snapshot.selectedPlanId) {
+      updates.selectedPlanId = recommendedPlan.id
+    }
+    if (snapshot.selectedOptionIds.length === 0) {
+      updates.selectedOptionIds = suggestedOptions.map((option) => option.id)
+    }
+    if (Object.keys(updates).length === 0) {
+      return
+    }
+    patchSnapshot(updates)
+  }, [allQuestionsAnswered, patchSnapshot, recommendedPlan.id, snapshot, suggestedOptionsKey])
+
   const activeOptionIds = useMemo(() => {
-    if (!allQuestionsAnswered) {
+    if (!allQuestionsAnswered || !snapshot) {
       return []
     }
-
-    if (selectedOptionIds.length > 0) {
-      return selectedOptionIds
-    }
-
-    return suggestedOptions.map((option) => option.id)
-  }, [allQuestionsAnswered, selectedOptionIds, suggestedOptions])
+    return snapshot.selectedOptionIds
+  }, [allQuestionsAnswered, snapshot])
 
   const totalPrice = useMemo(() => {
     const optionsTotal = mockOptions
       .filter((option) => activeOptionIds.includes(option.id))
       .reduce((sum, option) => sum + option.monthlyPrice, 0)
 
-    return recommendedPlan.monthlyPrice + optionsTotal
-  }, [activeOptionIds, recommendedPlan.monthlyPrice])
+    return activePlan.monthlyPrice + optionsTotal
+  }, [activeOptionIds, activePlan.monthlyPrice])
+
+  const flowLocked = Boolean(snapshot?.isCheckoutComplete && snapshot?.hasViewedContract)
+
+  if (!currentUser || !snapshot) {
+    return (
+      <div className="page-grid">
+        <SectionCard title={t('onboardingTitle')} description={t('onboardingDescription')}>
+          <p className="inline-note">{t('dataLoading')}</p>
+        </SectionCard>
+      </div>
+    )
+  }
 
   return (
     <div className="page-grid">
@@ -84,15 +112,21 @@ export function OnboardingPage() {
             <div className="result-banner">
               <div>
                 <p className="eyebrow">{t('onboardingTopPlans')}</p>
+                {activePlan.id !== recommendedPlan.id ? (
+                  <p className="inline-note" style={{ margin: '0 0 8px' }}>
+                    {t('onboardingQuizTopMatch')}: {localizeText(recommendedPlan.name, locale)} /{' '}
+                    {localizeText(recommendedPlan.stayRange, locale)}
+                  </p>
+                ) : null}
                 <h3>
-                  {localizeText(recommendedPlan.name, locale)} / {localizeText(recommendedPlan.stayRange, locale)}
+                  {localizeText(activePlan.name, locale)} / {localizeText(activePlan.stayRange, locale)}
                 </h3>
               </div>
-              <StatusBadge label={`月額 ¥${recommendedPlan.monthlyPrice.toLocaleString()}`} tone="success" />
+              <StatusBadge label={`月額 ¥${activePlan.monthlyPrice.toLocaleString()}`} tone="success" />
             </div>
 
             <div className="tag-row">
-              {recommendedPlan.highlights.map((highlight) => (
+              {activePlan.highlights.map((highlight) => (
                 <span key={highlight.ja} className="info-tag">
                   {localizeText(highlight, locale)}
                 </span>
@@ -100,23 +134,31 @@ export function OnboardingPage() {
             </div>
 
             <div className="stack">
-              {rankedPlans.map((item) => (
-                <div key={item.plan.id} className="mini-card mini-card--row">
-                  <div>
-                    <strong>
-                      {localizeText(item.plan.name, locale)} / {localizeText(item.plan.stayRange, locale)}
-                    </strong>
-                    <p>score: {item.score}</p>
-                  </div>
-                  <div className="tag-row">
-                    {item.reasons.slice(0, 3).map((reason) => (
-                      <span key={reason} className="info-tag">
-                        {reason}
+              <p className="question-title">{t('onboardingPlanPickTitle')}</p>
+              <p className="inline-note">{t('onboardingPlanPickDescription')}</p>
+              <div className="choice-grid">
+                {mockPlans.map((plan) => {
+                  const score = rankedPlans.find((item) => item.plan.id === plan.id)?.score ?? 0
+                  const isActive = activePlan.id === plan.id
+
+                  return (
+                    <button
+                      key={plan.id}
+                      type="button"
+                      disabled={flowLocked}
+                      className={isActive ? 'choice-pill choice-pill--active' : 'choice-pill'}
+                      onClick={() => patchSnapshot({ selectedPlanId: plan.id })}
+                    >
+                      <span className="plan-pick-label">
+                        {localizeText(plan.name, locale)} / {localizeText(plan.stayRange, locale)}
                       </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
+                      <span className="plan-pick-meta">
+                        ¥{plan.monthlyPrice.toLocaleString()} / {locale === 'ja' ? '診断スコア' : 'Quiz score'} {score}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
             </div>
 
             <div className="stack">
@@ -147,14 +189,14 @@ export function OnboardingPage() {
                   <label key={option.id} className="checkbox-card">
                     <input
                       type="checkbox"
+                      disabled={flowLocked}
                       checked={checked}
-                      onChange={() =>
-                        setSelectedOptionIds((current) =>
-                          current.includes(option.id)
-                            ? current.filter((id) => id !== option.id)
-                            : [...current, option.id],
-                        )
-                      }
+                      onChange={() => {
+                        const next = checked
+                          ? activeOptionIds.filter((id) => id !== option.id)
+                          : [...activeOptionIds, option.id]
+                        patchSnapshot({ selectedOptionIds: next })
+                      }}
                     />
                     <span>
                       <strong>{localizeText(option.name, locale)}</strong>
@@ -191,16 +233,29 @@ export function OnboardingPage() {
               <Link className="nav-link" to="/migration">
                 {t('migrationGo')}
               </Link>
-              <button type="button" onClick={() => setHasViewedContract(true)}>
+              <button
+                type="button"
+                disabled={flowLocked || snapshot.hasViewedContract}
+                onClick={() => patchSnapshot({ hasViewedContract: true })}
+              >
                 {t('onboardingContract')}
               </button>
-              <button type="button" onClick={() => setIsCheckoutComplete(true)}>
+              <button
+                type="button"
+                disabled={flowLocked || !snapshot.hasViewedContract || snapshot.isCheckoutComplete}
+                onClick={() =>
+                  patchSnapshot({
+                    isCheckoutComplete: true,
+                    contractedPropertyId: recommendedProperties[0]?.id ?? null,
+                  })
+                }
+              >
                 {t('onboardingCheckout')}
               </button>
             </div>
 
-            {hasViewedContract ? <p className="inline-note">{t('onboardingContractDone')}</p> : null}
-            {isCheckoutComplete ? <p className="inline-note">{t('onboardingCheckoutDone')}</p> : null}
+            {snapshot.hasViewedContract ? <p className="inline-note">{t('onboardingContractDone')}</p> : null}
+            {snapshot.isCheckoutComplete ? <p className="inline-note">{t('onboardingCheckoutDone')}</p> : null}
           </div>
         ) : (
           <p>{t('onboardingWaiting')}</p>

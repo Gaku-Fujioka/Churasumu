@@ -22,10 +22,19 @@ export const mockUsers: MockUser[] = [
   {
     id: 'user-international',
     name: 'Emma Lee',
-    role: 'admin',
+    role: 'resident',
     persona: 'international',
     nationality: 'Singapore',
     language: 'en',
-    stayPurpose: 'Long stay support and admin preview',
+    stayPurpose: 'Mid-length stay in Okinawa (English-first support preferred)',
+  },
+  {
+    id: 'user-admin-tamaki',
+    name: '玉城 管理子',
+    role: 'admin',
+    persona: 'migrant',
+    nationality: '日本',
+    language: 'ja',
+    stayPurpose: 'タマキホーム 運用・予約管理（管理者モック）',
   },
 ]

@@ -5,13 +5,18 @@
 }
 
 .app-header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: flex-start;
   gap: 24px;
   padding: 32px;
   border-bottom: 1px solid var(--border);
   text-align: left;
-  align-items: flex-start;
+}
+
+.app-header__brand {
+  justify-self: start;
+  min-width: 0;
 }
 
 .app-header h1 {
@@ -31,6 +36,8 @@
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
+  justify-self: center;
+  align-self: flex-start;
 }
 
 .nav-link,
@@ -143,6 +150,27 @@ button:hover,
   border-color: var(--accent-border);
 }
 
+.choice-pill:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.choice-pill .plan-pick-label {
+  display: block;
+  font-weight: 600;
+}
+
+.choice-pill .plan-pick-meta {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.88;
+}
+
+.stay-enrolled-banner {
+  align-items: flex-start;
+}
+
 .result-banner,
 .mini-card--row {
   display: flex;
@@ -221,7 +249,13 @@ select {
 }
 
 .danger-button {
-  border-color: rgba(239, 68, 68, 0.35);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: rgba(220, 38, 38, 0.9);
+}
+
+.danger-button:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(220, 38, 38, 0.7);
 }
 
 .chat-window {

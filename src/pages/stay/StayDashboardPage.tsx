@@ -1,11 +1,17 @@
 import { useMemo, useState } from 'react'
 import { SectionCard } from '../../components/SectionCard.tsx'
 import { StatusBadge } from '../../components/StatusBadge.tsx'
+import { mockOptions, mockPlans } from '../../data/mockPlans.ts'
 import { mockProperties } from '../../data/mockProperties.ts'
+import { localizeText } from '../../data/translations.ts'
+import { useAuth } from '../../hooks/useAuth.ts'
+import { useEnrollment } from '../../hooks/useEnrollment.ts'
 import { useLocale } from '../../hooks/useLocale.ts'
 
 export function StayDashboardPage() {
-  const { t } = useLocale()
+  const { locale, t } = useLocale()
+  const { currentUser } = useAuth()
+  const { snapshot, cancelEnrollment } = useEnrollment()
   const [isLocked, setIsLocked] = useState(true)
   const [extensionDays, setExtensionDays] = useState(7)
   const [cleaningRequested, setCleaningRequested] = useState(false)
@@ -16,7 +22,32 @@ export function StayDashboardPage() {
   const [uploadedFileName, setUploadedFileName] = useState('')
   const [reportSubmitted, setReportSubmitted] = useState(false)
 
-  const currentProperty = mockProperties[2]
+  const enrolledPlan = useMemo(() => {
+    if (!snapshot || !currentUser || snapshot.userId !== currentUser.id) {
+      return undefined
+    }
+    if (!snapshot.isCheckoutComplete || !snapshot.hasViewedContract || !snapshot.selectedPlanId) {
+      return undefined
+    }
+    return mockPlans.find((plan) => plan.id === snapshot.selectedPlanId)
+  }, [currentUser, snapshot])
+
+  const optionsMonthlyTotal = useMemo(() => {
+    if (!snapshot?.selectedOptionIds.length) {
+      return 0
+    }
+    return mockOptions
+      .filter((option) => snapshot.selectedOptionIds.includes(option.id))
+      .reduce((sum, option) => sum + option.monthlyPrice, 0)
+  }, [snapshot])
+
+  const currentProperty = useMemo(() => {
+    if (!enrolledPlan || !snapshot?.contractedPropertyId) {
+      return mockProperties[2]
+    }
+    return mockProperties.find((property) => property.id === snapshot.contractedPropertyId) ?? mockProperties[2]
+  }, [enrolledPlan, snapshot])
+
   const stayPeriod = '2026/04/16 - 2026/05/16'
 
   const extensionLabel = useMemo(
@@ -29,6 +60,41 @@ export function StayDashboardPage() {
 
   return (
     <div className="page-grid">
+      {enrolledPlan ? (
+        <SectionCard title={t('stayEnrolledPlanTitle')} description={t('stayEnrolledPlanDescription')}>
+          <div className="stack">
+            <div className="result-banner stay-enrolled-banner">
+              <div>
+                <h3 style={{ margin: '0 0 8px' }}>
+                  {localizeText(enrolledPlan.name, locale)} / {localizeText(enrolledPlan.stayRange, locale)}
+                </h3>
+                <p style={{ margin: 0 }}>
+                  {t('onboardingMonthlyTotal')}: ¥
+                  {(enrolledPlan.monthlyPrice + optionsMonthlyTotal).toLocaleString()}
+                </p>
+                <p style={{ margin: '8px 0 0' }}>
+                  {t('stayEnrolledPropertyLabel')}: {currentProperty.name}
+                </p>
+              </div>
+              <StatusBadge label={`${t('onboardingSelectedOptions')}: ${snapshot?.selectedOptionIds.length ?? 0}`} tone="success" />
+            </div>
+            <div>
+              <button
+                type="button"
+                className="danger-button"
+                onClick={() => {
+                  if (window.confirm(t('stayCancelConfirm'))) {
+                    cancelEnrollment()
+                  }
+                }}
+              >
+                {t('stayCancelPlan')}
+              </button>
+            </div>
+          </div>
+        </SectionCard>
+      ) : null}
+
       <SectionCard title={t('staySummaryTitle')} description={t('staySummaryDescription')}>
         <div className="stack">
           <div className="summary-box">

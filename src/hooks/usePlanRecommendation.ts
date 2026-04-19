@@ -1,12 +1,56 @@
 import { useMemo } from 'react'
 import { mockProperties } from '../data/mockProperties.ts'
 import { mockOptions, mockPlans, recommendationQuestions } from '../data/mockPlans.ts'
-import type { MockUser, Property, RecommendationResultItem } from '../types/domain.ts'
+import type { MockUser, Property, RecommendationResultItem, StayPlan } from '../types/domain.ts'
 
 export type AnswerMap = Record<string, string>
 
-export function usePlanRecommendation(answers: AnswerMap, currentUser: MockUser | null) {
+function rankPropertiesForPlan(
+  activePlan: StayPlan,
+  propertyFeatureAffinity: Set<string>,
+  currentUser: MockUser | null,
+  useResidentSignals: boolean,
+): Property[] {
+  return [...mockProperties]
+    .map((property) => {
+      let score = 0
+
+      activePlan.propertyFeatureAffinity?.forEach((feature) => {
+        if (property.features.includes(feature)) {
+          score += 10
+        }
+      })
+
+      property.features.forEach((feature) => {
+        if (propertyFeatureAffinity.has(feature)) {
+          score += 2
+        }
+      })
+
+      if (useResidentSignals && currentUser && property.idealFor?.includes(currentUser.persona)) {
+        score += 2
+      }
+
+      if (useResidentSignals && currentUser && property.languageSupport?.includes(currentUser.language)) {
+        score += 1
+      }
+
+      score += Math.round((property.communityScore ?? 0) / 50)
+
+      return { property, score }
+    })
+    .sort((left, right) => right.score - left.score || left.property.monthlyRent - right.property.monthlyRent)
+    .slice(0, 3)
+    .map((item) => item.property)
+}
+
+export function usePlanRecommendation(
+  answers: AnswerMap,
+  currentUser: MockUser | null,
+  selectedPlanId: string | null,
+) {
   return useMemo(() => {
+    const useResidentSignals = currentUser?.role !== 'admin'
     const scoreMap = new Map(mockPlans.map((plan) => [plan.id, 0]))
     const suggestedOptionIds = new Set<string>()
     const reasonMap = new Map<string, string[]>()
@@ -41,12 +85,12 @@ export function usePlanRecommendation(answers: AnswerMap, currentUser: MockUser 
     })
 
     mockPlans.forEach((plan) => {
-      if (currentUser && plan.recommendedFor.includes(currentUser.persona)) {
+      if (useResidentSignals && currentUser && plan.recommendedFor.includes(currentUser.persona)) {
         scoreMap.set(plan.id, (scoreMap.get(plan.id) ?? 0) + 2)
         pushReason(plan.id, `persona:${currentUser.persona}`)
       }
 
-      if (currentUser && plan.compatibleLocales?.includes(currentUser.language)) {
+      if (useResidentSignals && currentUser && plan.compatibleLocales?.includes(currentUser.language)) {
         scoreMap.set(plan.id, (scoreMap.get(plan.id) ?? 0) + 1)
         pushReason(plan.id, `locale:${currentUser.language}`)
       }
@@ -71,41 +115,28 @@ export function usePlanRecommendation(answers: AnswerMap, currentUser: MockUser 
 
     const recommendedPlan = resultItems[0]?.plan ?? mockPlans[0]
 
+    const activePlan =
+      selectedPlanId && mockPlans.some((plan) => plan.id === selectedPlanId)
+        ? (mockPlans.find((plan) => plan.id === selectedPlanId) as StayPlan)
+        : recommendedPlan
+
     const suggestedOptions = mockOptions.filter((option) => suggestedOptionIds.has(option.id))
-    const recommendedProperties: Property[] = [...mockProperties]
-      .map((property) => {
-        let score = 0
-
-        if (currentUser && property.idealFor?.includes(currentUser.persona)) {
-          score += 2
-        }
-
-        if (currentUser && property.languageSupport?.includes(currentUser.language)) {
-          score += 1
-        }
-
-        property.features.forEach((feature) => {
-          if (propertyFeatureAffinity.has(feature)) {
-            score += 1
-          }
-        })
-
-        score += Math.round((property.communityScore ?? 0) / 50)
-
-        return { property, score }
-      })
-      .sort((left, right) => right.score - left.score || left.property.monthlyRent - right.property.monthlyRent)
-      .slice(0, 3)
-      .map((item) => item.property)
+    const recommendedProperties = rankPropertiesForPlan(
+      activePlan,
+      propertyFeatureAffinity,
+      currentUser,
+      useResidentSignals,
+    )
 
     const explanations = resultItems[0]?.reasons ?? []
 
     return {
       rankedPlans: resultItems.slice(0, 3),
       recommendedPlan,
+      activePlan,
       suggestedOptions,
       recommendedProperties,
       explanations,
     }
-  }, [answers, currentUser])
+  }, [answers, currentUser, selectedPlanId])
 }

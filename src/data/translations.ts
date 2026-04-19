@@ -15,9 +15,10 @@ export const messages = {
   loggedOut: { ja: '未ログイン', en: 'Logged out' },
   loginTitle: { ja: 'モックログイン', en: 'Mock login' },
   loginDescription: {
-    ja: '3種類の想定ユーザーから選んで、一般画面または管理画面の導線を確認できます。',
-    en: 'Choose one of three mock users to preview resident and admin flows.',
+    ja: '想定ユーザー（滞在者3名＋管理者1名）から選び、一般画面または管理画面の導線を確認できます。',
+    en: 'Pick a mock profile (three residents plus one admin) to preview resident or admin flows.',
   },
+  dataLoading: { ja: '読み込み中…', en: 'Loading…' },
   loginPersonaLabel: { ja: '利用タイプ', en: 'Persona' },
   onboardingTitle: { ja: 'レコメンド型プラン選択', en: 'Recommended plan selection' },
   onboardingDescription: {
@@ -26,9 +27,15 @@ export const messages = {
   },
   onboardingResultTitle: { ja: 'プラン診断結果', en: 'Recommendation results' },
   onboardingResultDescription: {
-    ja: '回答後は、提案プランをベースにオプションや合計金額を調整できます。',
-    en: 'After answering, adjust options and pricing based on the suggested plan.',
+    ja: '回答後はプランを選び、物件候補・オプション・料金を確認してから契約書類の確認とモック決済へ進んでください。',
+    en: 'After answering, pick a plan, review property matches, options, and pricing, then confirm documents and mock checkout.',
   },
+  onboardingPlanPickTitle: { ja: '加入プランを選択', en: 'Choose your plan' },
+  onboardingPlanPickDescription: {
+    ja: '次の3種類から選ぶと、プランに合わせて物件候補の並びが変わります。',
+    en: 'Pick one of three plans; suggested properties reorder to match that plan.',
+  },
+  onboardingQuizTopMatch: { ja: '診断の第1候補', en: 'Top match from quiz' },
   onboardingTopPlans: { ja: 'おすすめ候補', en: 'Top recommendations' },
   onboardingSuggestedProperties: { ja: '物件候補', en: 'Suggested properties' },
   onboardingSuggestedOptions: { ja: 'おすすめオプション', en: 'Suggested options' },
@@ -47,6 +54,17 @@ export const messages = {
   onboardingCheckoutDone: {
     ja: 'モック決済完了: 申込内容を保存し、滞在管理ページで入居準備を進められます。',
     en: 'Mock checkout completed: your application is saved and you can continue in Stay Management.',
+  },
+  stayEnrolledPlanTitle: { ja: 'ご契約プラン', en: 'Your enrolled plan' },
+  stayEnrolledPlanDescription: {
+    ja: '契約書類の確認とモック決済が完了した申込内容です（この端末に保存）。',
+    en: 'Saved on this device after contract review and mock checkout.',
+  },
+  stayEnrolledPropertyLabel: { ja: '割当物件', en: 'Assigned property' },
+  stayCancelPlan: { ja: '解約する', en: 'Cancel contract' },
+  stayCancelConfirm: {
+    ja: '解約すると契約情報がリセットされ、プラン選択からやり直しになります。よろしいですか？',
+    en: 'Cancelling will reset your contract and you will need to go through plan selection again. Are you sure?',
   },
   staySummaryTitle: { ja: '滞在サマリー', en: 'Stay summary' },
   staySummaryDescription: {
@@ -238,6 +256,17 @@ export function localizeRequestStatus(status: string, locale: AppLocale) {
     submitted: { ja: '送信済み', en: 'Submitted' },
     reviewing: { ja: '確認中', en: 'Reviewing' },
     approved: { ja: '承認済み', en: 'Approved' },
+  }
+
+  return labels[status]?.[locale] ?? status
+}
+
+/** 管理画面トラブル報告の対応ステータス（内部値は new / in_progress / resolved のまま） */
+export function localizeTroubleReportStatus(status: string, locale: AppLocale) {
+  const labels: Record<string, { ja: string; en: string }> = {
+    new: { ja: '新規', en: 'New' },
+    in_progress: { ja: '対応中', en: 'In progress' },
+    resolved: { ja: '完了', en: 'Resolved' },
   }
 
   return labels[status]?.[locale] ?? status
