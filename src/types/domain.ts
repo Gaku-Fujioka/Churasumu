@@ -42,6 +42,7 @@ export interface Property {
   purchasePrice?: number
   expectedMonthlyMortgage?: number
   supportHighlights?: string[]
+  planEligibility?: string[]
 }
 
 export interface PlanOption {
