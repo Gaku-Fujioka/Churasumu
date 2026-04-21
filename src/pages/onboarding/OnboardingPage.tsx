@@ -253,7 +253,7 @@ export function OnboardingPage() {
                 onClick={() =>
                   patchSnapshot({
                     isCheckoutComplete: true,
-                    contractedPropertyId: recommendedProperties[0]?.id ?? null,
+                    contractedPropertyId: null,
                   })
                 }
               >

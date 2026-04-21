@@ -98,6 +98,16 @@ export const mockOptions: PlanOption[] = [
   },
 ]
 
+/**
+ * モック用途: 各プランで必ず1件「他のユーザーが滞在中」扱いにする物件の固定マッピング。
+ * 実装では本来、サーバー側の占有状況を参照する想定。
+ */
+export const otherUserOccupiedByPlan: Record<string, string> = {
+  'plan-short': 'prop-naha-bay',
+  'plan-standard': 'prop-okinawa-city',
+  'plan-long': 'prop-chatan-hills',
+}
+
 export const recommendationQuestions: RecommendationQuestion[] = [
   {
     id: 'purpose',

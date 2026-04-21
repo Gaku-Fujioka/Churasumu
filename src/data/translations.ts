@@ -62,6 +62,24 @@ export const messages = {
     en: 'Saved on this device after contract review and mock checkout.',
   },
   stayEnrolledPropertyLabel: { ja: '割当物件', en: 'Assigned property' },
+  stayPlanPropertiesTitle: { ja: 'プラン対象の家', en: 'Homes available on your plan' },
+  stayPlanPropertiesDescription: {
+    ja: '加入プラン対象の物件から、空きの家を1件選んで入居します。退去すると再び空きになります。',
+    en: 'Pick one available home from your plan to move in. Leaving a home returns it to available.',
+  },
+  stayPickProperty: { ja: 'この家に入居する', en: 'Move into this home' },
+  stayLeaveProperty: { ja: '退去する', en: 'Leave this home' },
+  stayLeaveConfirm: {
+    ja: 'この家から退去しますか？ 退去後は別の空きの家を選び直せます。',
+    en: 'Leave this home? After leaving you can pick a different available home.',
+  },
+  stayStatusStaying: { ja: '滞在中', en: 'Staying' },
+  stayStatusAvailable: { ja: '空き', en: 'Available' },
+  stayStatusOtherUser: { ja: '他ユーザー滞在中', en: 'Occupied by another user' },
+  stayPickPrompt: {
+    ja: 'まだ家を選んでいません。下の「プラン対象の家」から空きの家を1件選んで入居してください。',
+    en: 'No home selected yet. Pick an available home below to move in.',
+  },
   stayCancelPlan: { ja: '解約する', en: 'Cancel contract' },
   stayCancelConfirm: {
     ja: '解約すると契約情報がリセットされ、プラン選択からやり直しになります。よろしいですか？',

@@ -1,18 +1,20 @@
 import { useMemo, useState } from 'react'
 import { SectionCard } from '../../components/SectionCard.tsx'
 import { StatusBadge } from '../../components/StatusBadge.tsx'
-import { mockOptions, mockPlans } from '../../data/mockPlans.ts'
+import { mockOptions, mockPlans, otherUserOccupiedByPlan } from '../../data/mockPlans.ts'
 import { mockProperties } from '../../data/mockProperties.ts'
-import { localizeText } from '../../data/translations.ts'
+import { localizeFeature, localizeText } from '../../data/translations.ts'
 import { useAuth } from '../../hooks/useAuth.ts'
 import { useEnrollment } from '../../hooks/useEnrollment.ts'
 import { useLocale } from '../../hooks/useLocale.ts'
 import { pickUi } from '../../lib/pickUi.ts'
 
+type PropertyStatus = 'staying' | 'available' | 'other'
+
 export function StayDashboardPage() {
   const { locale, t } = useLocale()
   const { currentUser } = useAuth()
-  const { snapshot, cancelEnrollment } = useEnrollment()
+  const { snapshot, patchSnapshot, cancelEnrollment } = useEnrollment()
   const [isLocked, setIsLocked] = useState(true)
   const [extensionDays, setExtensionDays] = useState(7)
   const [cleaningRequested, setCleaningRequested] = useState(false)
@@ -43,11 +45,52 @@ export function StayDashboardPage() {
   }, [snapshot])
 
   const currentProperty = useMemo(() => {
-    if (!enrolledPlan || !snapshot?.contractedPropertyId) {
-      return mockProperties[2]
+    if (!snapshot?.contractedPropertyId) {
+      return undefined
     }
-    return mockProperties.find((property) => property.id === snapshot.contractedPropertyId) ?? mockProperties[2]
-  }, [enrolledPlan, snapshot])
+    return mockProperties.find((property) => property.id === snapshot.contractedPropertyId)
+  }, [snapshot])
+
+  const displayedProperty = currentProperty ?? mockProperties[2]
+
+  const eligibleProperties = useMemo(() => {
+    if (!enrolledPlan) {
+      return []
+    }
+    return mockProperties.filter((property) => property.planEligibility?.includes(enrolledPlan.id))
+  }, [enrolledPlan])
+
+  const otherUserPropertyId = enrolledPlan ? otherUserOccupiedByPlan[enrolledPlan.id] ?? null : null
+  const selectedPropertyId = snapshot?.contractedPropertyId ?? null
+
+  const propertyStatus = (propertyId: string): PropertyStatus => {
+    if (selectedPropertyId === propertyId) {
+      return 'staying'
+    }
+    if (otherUserPropertyId === propertyId) {
+      return 'other'
+    }
+    return 'available'
+  }
+
+  const handlePickProperty = (propertyId: string) => {
+    if (propertyStatus(propertyId) !== 'available') {
+      return
+    }
+    patchSnapshot({ contractedPropertyId: propertyId })
+  }
+
+  const handleLeaveProperty = () => {
+    if (!selectedPropertyId) {
+      return
+    }
+    if (window.confirm(t('stayLeaveConfirm'))) {
+      patchSnapshot({ contractedPropertyId: null })
+    }
+  }
+
+  const hasSelectedProperty = Boolean(enrolledPlan && currentProperty)
+  const showDetailSections = !enrolledPlan || hasSelectedProperty
 
   const stayPeriod = '2026/04/16 - 2026/05/16'
 
@@ -77,7 +120,8 @@ export function StayDashboardPage() {
                   {(enrolledPlan.monthlyPrice + optionsMonthlyTotal).toLocaleString()}
                 </p>
                 <p style={{ margin: '8px 0 0' }}>
-                  {t('stayEnrolledPropertyLabel')}: {currentProperty.name}
+                  {t('stayEnrolledPropertyLabel')}:{' '}
+                  {currentProperty ? currentProperty.name : '—'}
                 </p>
               </div>
               <StatusBadge label={`${t('onboardingSelectedOptions')}: ${snapshot?.selectedOptionIds.length ?? 0}`} tone="success" />
@@ -99,15 +143,73 @@ export function StayDashboardPage() {
         </SectionCard>
       ) : null}
 
+      {enrolledPlan ? (
+        <SectionCard
+          title={t('stayPlanPropertiesTitle')}
+          description={t('stayPlanPropertiesDescription')}
+        >
+          {!currentProperty ? <p className="inline-note">{t('stayPickPrompt')}</p> : null}
+          <div className="support-grid">
+            {eligibleProperties.map((property) => {
+              const status = propertyStatus(property.id)
+              const badgeTone =
+                status === 'staying' ? 'success' : status === 'other' ? 'warning' : 'neutral'
+              const statusLabel =
+                status === 'staying'
+                  ? t('stayStatusStaying')
+                  : status === 'other'
+                    ? t('stayStatusOtherUser')
+                    : t('stayStatusAvailable')
+              const canPick = status === 'available' && !currentProperty
+
+              return (
+                <article key={property.id} className="mini-card stay-plan-card">
+                  <span className={`stay-plan-card__status badge badge--${badgeTone}`}>
+                    {statusLabel}
+                  </span>
+                  <div>
+                    <strong>{property.name}</strong>
+                    <p style={{ margin: '4px 0 0' }}>
+                      {property.city} / ¥{property.monthlyRent.toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="tag-row">
+                    {property.features.map((feature) => (
+                      <span key={feature} className="info-tag">
+                        {localizeFeature(feature, locale)}
+                      </span>
+                    ))}
+                  </div>
+                  {status === 'staying' ? (
+                    <button type="button" className="danger-button" onClick={handleLeaveProperty}>
+                      {t('stayLeaveProperty')}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={!canPick}
+                      onClick={() => handlePickProperty(property.id)}
+                    >
+                      {t('stayPickProperty')}
+                    </button>
+                  )}
+                </article>
+              )
+            })}
+          </div>
+        </SectionCard>
+      ) : null}
+
+      {showDetailSections ? (
       <SectionCard title={t('staySummaryTitle')} description={t('staySummaryDescription')}>
         <div className="stack">
           <div className="summary-box">
             <p>
               {pickUi(locale, {
-                ja: `物件名: ${currentProperty.name}`,
-                en: `Property: ${currentProperty.name}`,
-                zh: `房源名称：${currentProperty.name}`,
-                ko: `매물명: ${currentProperty.name}`,
+                ja: `物件名: ${displayedProperty.name}`,
+                en: `Property: ${displayedProperty.name}`,
+                zh: `房源名称：${displayedProperty.name}`,
+                ko: `매물명: ${displayedProperty.name}`,
               })}
             </p>
             <p>
@@ -120,10 +222,10 @@ export function StayDashboardPage() {
             </p>
             <p>
               {pickUi(locale, {
-                ja: `エリア: ${currentProperty.city}`,
-                en: `Area: ${currentProperty.city}`,
-                zh: `区域：${currentProperty.city}`,
-                ko: `지역: ${currentProperty.city}`,
+                ja: `エリア: ${displayedProperty.city}`,
+                en: `Area: ${displayedProperty.city}`,
+                zh: `区域：${displayedProperty.city}`,
+                ko: `지역: ${displayedProperty.city}`,
               })}
             </p>
           </div>
@@ -168,7 +270,9 @@ export function StayDashboardPage() {
           <p className="inline-note">{extensionLabel}</p>
         </div>
       </SectionCard>
+      ) : null}
 
+      {showDetailSections ? (
       <SectionCard title={t('troubleReportTitle')} description={t('troubleReportDescription')}>
         <form
           className="stack"
@@ -246,7 +350,9 @@ export function StayDashboardPage() {
           ) : null}
         </form>
       </SectionCard>
+      ) : null}
 
+      {showDetailSections ? (
       <SectionCard title={t('supportTitle')} description={t('supportDescription')}>
         <div className="stack">
           <div className="support-grid">
@@ -343,6 +449,7 @@ export function StayDashboardPage() {
           ) : null}
         </div>
       </SectionCard>
+      ) : null}
     </div>
   )
 }

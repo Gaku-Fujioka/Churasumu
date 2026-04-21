@@ -211,6 +211,24 @@ button:hover,
   align-items: flex-start;
 }
 
+.stay-plan-card {
+  position: relative;
+  padding-top: 44px;
+}
+
+.stay-plan-card__status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.stay-plan-card button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .result-banner,
 .mini-card--row {
   display: flex;
