@@ -14,7 +14,7 @@ export function MigrationHubPage() {
   ]
 
   return (
-    <div className="page-grid">
+    <>
       <SectionCard title={t('migrationHubTitle')} description={t('migrationHubDescription')}>
         <div className="support-grid">
           {entries.map((entry) => (
@@ -27,6 +27,6 @@ export function MigrationHubPage() {
           ))}
         </div>
       </SectionCard>
-    </div>
+    </>
   )
 }
