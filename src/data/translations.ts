@@ -210,6 +210,22 @@ export const messages = {
   stayHomeStripReviews: { ja: '口コミ', en: 'Reviews' },
   stayHomeStripWorkSpots: { ja: '作業スポット', en: 'Work' },
   stayHomeStripSupport: { ja: '生活支援', en: 'Support' },
+  stayRhythmBannerEyebrow: { ja: 'このページで', en: 'Here you can' },
+  stayRhythmBannerText: {
+    ja: '契約プランとお住まいの確認、鍵・連絡・延長などをまとめています。下のメニューからコミュニティや移住サポートへもすぐ移動できます。',
+    en: 'Review your plan and home, manage locks and requests, and extend your stay. Use the shortcuts below for community or relocation support.',
+  },
+  communityHubKicker: { ja: 'コミュニティ', en: 'Community' },
+  communityHubPriorityNavAria: { ja: 'よく使うコミュニティ機能', en: 'Popular community shortcuts' },
+  communityHubPreviewSectionTitle: { ja: 'ピックアップ', en: 'Highlights' },
+  stayHeroCoverAltGeneric: {
+    ja: '沖縄の海のイメージ写真（入居先は下の一覧から選択できます）',
+    en: 'Okinawa coastal scene — choose your home from the list below.',
+  },
+  communityHubCoverAlt: {
+    ja: '沖縄の海岸と街並みをイメージした写真',
+    en: 'Coastal Okinawa scenery.',
+  },
 } as const
 
 export type TranslationKey = keyof typeof messages

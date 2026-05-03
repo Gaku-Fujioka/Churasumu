@@ -1,9 +1,11 @@
 import type { Property } from '../types/domain.ts'
+import { STOCK_PHOTOS } from './stockPhotos.ts'
 
 export const mockProperties: Property[] = [
   {
     id: 'prop-naha-bay',
     name: 'Naha Bay Studio',
+    coverImageUrl: STOCK_PHOTOS.propertyNahaBay,
     area: '那覇市',
     city: '那覇市久茂地',
     monthlyRent: 128000,
@@ -20,6 +22,7 @@ export const mockProperties: Property[] = [
   {
     id: 'prop-naha-garden',
     name: 'Shuri Garden Stay',
+    coverImageUrl: STOCK_PHOTOS.propertyNahaGarden,
     area: '那覇市',
     city: '那覇市首里',
     monthlyRent: 118000,
@@ -36,6 +39,7 @@ export const mockProperties: Property[] = [
   {
     id: 'prop-okinawa-city',
     name: 'Koza Work Loft',
+    coverImageUrl: STOCK_PHOTOS.propertyKoza,
     area: '沖縄市',
     city: '沖縄市中央',
     monthlyRent: 98000,
@@ -52,6 +56,7 @@ export const mockProperties: Property[] = [
   {
     id: 'prop-chatan-seaside',
     name: 'Chatan Seaside Flat',
+    coverImageUrl: STOCK_PHOTOS.propertyChatanSea,
     area: '北谷町',
     city: '中頭郡北谷町',
     monthlyRent: 142000,
@@ -68,6 +73,7 @@ export const mockProperties: Property[] = [
   {
     id: 'prop-chatan-hills',
     name: 'Sunset Hills Residence',
+    coverImageUrl: STOCK_PHOTOS.propertyChatanHills,
     area: '北谷町',
     city: '中頭郡北谷町吉原',
     monthlyRent: 133000,

@@ -448,6 +448,36 @@ button:hover,
   gap: 14px;
 }
 
+.hero-card--split {
+  padding: 14px;
+  gap: 16px;
+}
+
+@media (min-width: 720px) {
+  .hero-card--split {
+    grid-template-columns: minmax(132px, min(34vw, 228px)) minmax(0, 1fr);
+    align-items: start;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 719px) {
+  .hero-card__figure {
+    max-width: 240px;
+    margin-inline: auto;
+  }
+}
+
+.hero-card__figure {
+  width: 100%;
+}
+
+.hero-card__stack {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
 @media (prefers-color-scheme: dark) {
   .hero-card {
     background: linear-gradient(180deg, var(--accent-bg), rgba(29, 31, 39, 0));
@@ -553,11 +583,320 @@ button:hover,
   gap: 24px;
 }
 
+/** 縦リズム：セクション間隔を均一にしない */
+.page-grid--rhythm {
+  gap: 20px;
+}
+
+.page-rhythm-loose {
+  margin-top: 26px;
+}
+
+.page-section-cluster {
+  display: grid;
+  gap: 14px;
+}
+
+.page-spot-banner {
+  margin-bottom: 2px;
+  padding: 16px 20px;
+  border-radius: 18px;
+  border: 1px solid var(--accent-border);
+  background: linear-gradient(115deg, var(--accent-bg) 0%, var(--surface) 52%, var(--surface) 100%);
+  box-shadow: var(--shadow);
+}
+
+.page-spot-banner__eyebrow {
+  margin: 0 0 6px;
+}
+
+.page-spot-banner__text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+@media (prefers-color-scheme: dark) {
+  .page-spot-banner {
+    background: linear-gradient(115deg, rgba(0, 180, 216, 0.14) 0%, var(--surface) 55%, var(--surface) 100%);
+  }
+}
+
 .section-card {
   border: 1px solid var(--border);
   border-radius: 20px;
   background: var(--surface);
   box-shadow: var(--shadow);
+}
+
+.section-card--spotlight {
+  border-color: var(--accent-border);
+  box-shadow: 0 14px 36px -22px rgba(0, 180, 216, 0.55);
+}
+
+.section-card--spotlight::before {
+  opacity: 1;
+}
+
+.section-card--quiet {
+  box-shadow: none;
+  background: var(--bg);
+  border-color: rgba(120, 115, 135, 0.2);
+}
+
+.section-card--quiet .section-card__header {
+  padding: 18px 22px 14px;
+}
+
+.section-card--quiet .section-card__body {
+  padding-top: 18px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .section-card--quiet {
+    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.community-hub-lede {
+  margin: 0 0 10px;
+  padding: 2px 4px 0;
+}
+
+.community-hub-lede__title {
+  margin: 0 0 10px;
+  font-size: clamp(24px, 4.5vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-h);
+  line-height: 1.15;
+}
+
+.community-hub-lede__desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+  max-width: 52ch;
+}
+
+.community-hub-intro-band {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  margin: 0 0 8px;
+}
+
+.community-hub-intro-band--split {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+}
+
+@media (min-width: 720px) {
+  .community-hub-intro-band--split {
+    grid-template-columns: minmax(132px, min(34vw, 228px)) minmax(0, 1fr);
+    align-items: start;
+    gap: 18px;
+  }
+}
+
+.community-hub-intro-band__figure {
+  width: 100%;
+}
+
+@media (max-width: 719px) {
+  .community-hub-intro-band__figure {
+    max-width: 240px;
+    margin-inline: auto;
+  }
+}
+
+/* 滞在ダッシュの契約ヒーローと同系のサムネ高さ */
+.media-cover--community-intro {
+  max-height: 140px;
+  border-radius: 14px;
+}
+
+@media (min-width: 720px) {
+  .media-cover--community-intro {
+    max-height: 156px;
+  }
+}
+
+.community-hub-lede--in-band {
+  margin: 0;
+  padding: 0 4px 4px;
+}
+
+@media (max-width: 719px) {
+  .community-hub-lede--in-band {
+    padding: 0 4px 2px;
+    text-align: center;
+  }
+
+  .community-hub-lede--in-band .eyebrow,
+  .community-hub-lede--in-band .community-hub-lede__title,
+  .community-hub-lede--in-band .community-hub-lede__desc {
+    margin-inline: auto;
+  }
+}
+
+.community-hub-spotlight-block .eyebrow {
+  margin: 0 0 8px;
+}
+
+.community-hub-priority-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 720px) {
+  .community-hub-priority-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.community-hub-priority-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 108px;
+  padding: 16px 16px 14px;
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--text-h);
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  border: 1px solid transparent;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.community-hub-priority-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.community-hub-priority-tile__meta {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  opacity: 0.88;
+}
+
+.community-hub-priority-tile--rose {
+  background: linear-gradient(145deg, #ffe4e8 0%, #fecdd3 100%);
+}
+
+.community-hub-priority-tile--sky {
+  background: linear-gradient(145deg, #e0f2fe 0%, #bae6fd 100%);
+}
+
+.community-hub-priority-tile--amber {
+  background: linear-gradient(145deg, #fef9c3 0%, #fde68a 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .community-hub-priority-tile--rose {
+    background: linear-gradient(145deg, #3f1d26 0%, #5c2d3a 100%);
+  }
+
+  .community-hub-priority-tile--sky {
+    background: linear-gradient(145deg, #0c4a6e 0%, #075985 100%);
+  }
+
+  .community-hub-priority-tile--amber {
+    background: linear-gradient(145deg, #422006 0%, #713f12 100%);
+  }
+}
+
+.media-cover {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--border);
+}
+
+.media-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 契約ヒーロー内のサムネ（横並び用・カード内に収める） */
+.media-cover--hero-split {
+  max-height: 140px;
+  border-radius: 14px;
+}
+
+@media (min-width: 720px) {
+  .media-cover--hero-split {
+    max-height: 156px;
+  }
+}
+
+.community-hub-cover {
+  margin: 0;
+}
+
+.community-hub-cover__media {
+  border-radius: 14px;
+}
+
+/* 一覧カード内：カード幅に収まるようインセット */
+.mini-card--with-cover .mini-card__cover.media-cover--thumbnail {
+  margin: 10px 12px 0;
+  width: calc(100% - 24px);
+  max-height: 72px;
+  border-radius: 10px;
+}
+
+@media (min-width: 720px) {
+  .mini-card--with-cover .mini-card__cover.media-cover--thumbnail {
+    max-height: 78px;
+  }
+}
+
+.media-cover--thumbnail {
+  max-height: 72px;
+}
+
+.media-cover--plan-pick {
+  max-height: 80px;
+}
+
+@media (min-width: 720px) {
+  .media-cover--thumbnail {
+    max-height: 78px;
+  }
+
+  .media-cover--plan-pick {
+    max-height: 88px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .media-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
 }
 
 .section-card__header,
@@ -591,6 +930,26 @@ button:hover,
   background: var(--bg);
 }
 
+.mini-card--with-cover {
+  padding: 0;
+  overflow: hidden;
+}
+
+.mini-card__body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mini-card__cover {
+  border-radius: 0;
+}
+
+.mini-card__cover img {
+  display: block;
+}
+
 .mini-card {
   display: flex;
   flex-direction: column;
@@ -601,6 +960,67 @@ button:hover,
 .mini-card .nav-link {
   margin-top: auto;
   align-self: flex-start;
+}
+
+/* クーポン・地域フィード・作業スポット：横幅いっぱいの横長写真をやめ、左サムネ＋本文 */
+.mini-card.mini-card--split {
+  display: grid;
+  gap: 0;
+}
+
+.mini-card__split-media {
+  min-width: 0;
+}
+
+@media (max-width: 479px) {
+  .mini-card--split {
+    grid-template-columns: 1fr;
+  }
+
+  .mini-card--split .mini-card__split-media {
+    display: flex;
+    justify-content: center;
+    padding: 14px 16px 0;
+  }
+
+  .mini-card--split .mini-card__cover.media-cover--split-thumb {
+    margin: 0;
+    width: 100%;
+    max-width: 196px;
+    border-radius: 12px;
+  }
+}
+
+@media (min-width: 480px) {
+  .mini-card--split {
+    grid-template-columns: minmax(100px, 124px) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .mini-card--split .mini-card__split-media {
+    position: relative;
+    align-self: stretch;
+    min-height: 120px;
+    border-right: 1px solid var(--border);
+    background: var(--border);
+  }
+
+  .mini-card--split .mini-card__cover.media-cover--split-thumb {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    max-height: none !important;
+    aspect-ratio: unset !important;
+  }
+
+  .mini-card--split .mini-card__cover.media-cover--split-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .question-title,
@@ -650,10 +1070,75 @@ button:hover,
 
 .stay-plan-card {
   position: relative;
+}
+
+.stay-plan-card--with-photo {
+  padding: 0;
+  overflow: hidden;
+}
+
+.stay-plan-card--with-photo .stay-plan-card__media-wrap {
+  position: relative;
+  margin: 10px 10px 0;
+  width: calc(100% - 20px);
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 11px;
+  overflow: hidden;
+}
+
+.stay-plan-card--with-photo .stay-plan-card__cover {
+  margin: 0;
+  width: 100%;
+  border-radius: 0;
+}
+
+.stay-plan-card__media-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(15, 17, 23, 0.58);
+}
+
+.stay-plan-card__media-overlay-label {
+  margin: 0;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.stay-plan-card--busy-overlay .stay-plan-card__status {
+  display: none;
+}
+
+.stay-plan-card--with-photo .stay-plan-card__status {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.stay-plan-card--with-photo .stay-plan-card__inner {
+  padding: 12px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stay-plan-card--no-photo {
   padding-top: 44px;
 }
 
-.stay-plan-card__status {
+.stay-plan-card--no-photo .stay-plan-card__status {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -661,9 +1146,22 @@ button:hover,
   font-weight: 600;
 }
 
+.stay-plan-card__status {
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .stay-plan-card button:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+.stay-plan-card .stay-plan-card__btn-occupied:disabled {
+  opacity: 1;
+  cursor: not-allowed;
+  background: var(--surface-elevated, var(--surface));
+  color: var(--text-h);
+  border: 1px solid var(--border);
 }
 
 .result-banner,
@@ -802,4 +1300,127 @@ td {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* ----- マイクロインタラクション（軽いホバー・アクティブ） ----- */
+@media (prefers-reduced-motion: no-preference) {
+  button:not(:disabled),
+  .nav-link:not(.bottom-nav__item),
+  .ghost-button,
+  .account-menu__link,
+  .subtab-pill {
+    transition:
+      border-color 0.16s ease,
+      background-color 0.16s ease,
+      color 0.16s ease,
+      transform 0.12s ease,
+      box-shadow 0.16s ease;
+  }
+
+  button:not(:disabled):active,
+  .nav-link:not(.bottom-nav__item):active,
+  .ghost-button:active,
+  .account-menu__link:active,
+  .subtab-pill:active {
+    transform: scale(0.98);
+  }
+
+  .bottom-nav__item {
+    transition:
+      border-color 0.16s ease,
+      background-color 0.16s ease,
+      color 0.16s ease,
+      transform 0.12s ease;
+  }
+
+  .bottom-nav__item:active {
+    transform: scale(0.97);
+  }
+
+  .mini-card {
+    transition:
+      transform 0.16s ease,
+      box-shadow 0.18s ease,
+      border-color 0.16s ease;
+  }
+
+  .mini-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: var(--accent-border);
+  }
+
+  .section-card {
+    transition: box-shadow 0.2s ease, border-color 0.18s ease;
+  }
+
+  .section-card:hover {
+    border-color: rgba(0, 180, 216, 0.22);
+  }
+
+  .section-card--spotlight:hover {
+    box-shadow: 0 14px 38px -22px rgba(0, 180, 216, 0.42);
+    border-color: var(--accent-border);
+  }
+
+  .choice-pill {
+    transition:
+      border-color 0.14s ease,
+      background-color 0.14s ease,
+      transform 0.11s ease;
+  }
+
+  .choice-pill:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .stay-home-quick-nav__tile {
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .stay-home-quick-nav__tile:active {
+    transform: translateY(-1px) scale(0.99);
+  }
+
+  .stay-home-quick-nav__strip-item {
+    transition:
+      transform 0.12s ease,
+      border-color 0.14s ease,
+      background-color 0.14s ease;
+  }
+
+  .stay-home-quick-nav__strip-item:active {
+    transform: scale(0.96);
+  }
+
+  .community-hub-priority-tile:active {
+    transform: translateY(-2px) scale(0.99);
+  }
+
+  .danger-button:not(:disabled):active {
+    transform: scale(0.98);
+  }
+
+  .hero-card {
+    transition: border-color 0.18s ease;
+  }
+}
+
+button:focus:not(:focus-visible),
+.nav-link:focus:not(:focus-visible),
+.subtab-pill:focus:not(:focus-visible),
+.bottom-nav__item:focus:not(:focus-visible) {
+  outline: none;
+}
+
+button:focus-visible,
+.nav-link:focus-visible,
+.subtab-pill:focus-visible,
+.bottom-nav__item:focus-visible,
+.choice-pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }

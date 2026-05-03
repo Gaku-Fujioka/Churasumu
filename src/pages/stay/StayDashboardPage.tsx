@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { MediaCover } from '../../components/MediaCover.tsx'
 import { SectionCard } from '../../components/SectionCard.tsx'
 import { StayHomeQuickNav } from '../../components/StayHomeQuickNav.tsx'
 import { StatusBadge } from '../../components/StatusBadge.tsx'
 import { mockOptions, mockPlans, otherUserOccupiedByPlan } from '../../data/mockPlans.ts'
 import { mockProperties } from '../../data/mockProperties.ts'
+import { STOCK_PHOTOS } from '../../data/stockPhotos.ts'
 import { localizeFeature, localizeText } from '../../data/translations.ts'
 import { useAuth } from '../../hooks/useAuth.ts'
 import { useEnrollment } from '../../hooks/useEnrollment.ts'
@@ -99,6 +101,21 @@ export function StayDashboardPage() {
 
   const stayPeriod = '2026/04/16 - 2026/05/16'
 
+  const stayHeroCoverAlt = useMemo(
+    () =>
+      currentProperty
+        ? pickUi(locale, {
+            ja: `「${currentProperty.name}」のイメージ`,
+            en: `Photo: ${currentProperty.name}`,
+            zh: `「${currentProperty.name}」示意`,
+            ko: `「${currentProperty.name}」 이미지`,
+          })
+        : t('stayHeroCoverAltGeneric'),
+    [currentProperty, locale, t],
+  )
+
+  const stayHeroImageSrc = currentProperty?.coverImageUrl ?? STOCK_PHOTOS.stayNoPropertyHero
+
   const extensionLabel = useMemo(
     () =>
       pickUi(locale, {
@@ -111,102 +128,123 @@ export function StayDashboardPage() {
   )
 
   return (
-    <div className="page-grid">
+    <div className="page-grid page-grid--rhythm">
       <StayHomeQuickNav />
+      <aside className="page-spot-banner">
+        <p className="eyebrow page-spot-banner__eyebrow">{t('stayRhythmBannerEyebrow')}</p>
+        <p className="page-spot-banner__text">{t('stayRhythmBannerText')}</p>
+      </aside>
       {enrolledPlan ? (
-        <SectionCard title={t('stayEnrolledPlanTitle')} description={t('stayEnrolledPlanDescription')}>
-          <div className="hero-card">
-            <div className="hero-card__top">
-              <div>
-                <p className="eyebrow">{t('staySummaryTitle')}</p>
-                <h3 className="hero-card__title">
-                  {currentProperty ? currentProperty.name : t('stayHeroNoPropertyTitle')}
-                </h3>
-                <p className="hero-card__subtitle">
+        <SectionCard
+          tone="spotlight"
+          title={t('stayEnrolledPlanTitle')}
+          description={t('stayEnrolledPlanDescription')}
+        >
+          <>
+            <div className="hero-card hero-card--split">
+              <div className="hero-card__figure">
+                <MediaCover
+                  src={stayHeroImageSrc}
+                  alt={stayHeroCoverAlt}
+                  aspectRatio="4 / 3"
+                  className="media-cover--hero-split"
+                  loading="eager"
+                />
+              </div>
+              <div className="hero-card__stack">
+              <div className="hero-card__top">
+                <div>
+                  <p className="eyebrow">{t('staySummaryTitle')}</p>
+                  <h3 className="hero-card__title">
+                    {currentProperty ? currentProperty.name : t('stayHeroNoPropertyTitle')}
+                  </h3>
+                  <p className="hero-card__subtitle">
+                    {currentProperty ? (
+                      <>
+                        {currentProperty.city} / ¥{currentProperty.monthlyRent.toLocaleString()}
+                      </>
+                    ) : (
+                      t('stayHeroNoPropertySubtitle')
+                    )}
+                  </p>
+                </div>
+                <div className="hero-card__badges">
+                  <StatusBadge
+                    label={
+                      currentProperty ? t('stayStatusStaying') : t('stayStatusNoProperty')
+                    }
+                    tone={currentProperty ? 'success' : 'neutral'}
+                  />
+                  {currentProperty ? (
+                    <StatusBadge
+                      label={pickUi(locale, {
+                        ja: isLocked ? '施錠中' : '解錠中',
+                        en: isLocked ? 'Locked' : 'Unlocked',
+                        zh: isLocked ? '已上锁' : '已解锁',
+                        ko: isLocked ? '잠김' : '열림',
+                      })}
+                      tone={isLocked ? 'neutral' : 'success'}
+                    />
+                  ) : null}
+                </div>
+              </div>
+
+              {currentProperty ? (
+                <div className="tag-row">
+                  {currentProperty.features.slice(0, 4).map((feature) => (
+                    <span key={feature} className="info-tag">
+                      {localizeFeature(feature, locale)}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+
+              <div className="hero-card__row">
+                <div className="hero-card__plan">
+                  <strong>
+                    {localizeText(enrolledPlan.name, locale)} / {localizeText(enrolledPlan.stayRange, locale)}
+                  </strong>
+                  <p className="hero-card__meta">
+                    {t('onboardingMonthlyTotal')}: ¥{(enrolledPlan.monthlyPrice + optionsMonthlyTotal).toLocaleString()} ·{' '}
+                    {t('onboardingSelectedOptions')}: {snapshot?.selectedOptionIds.length ?? 0}
+                  </p>
+                </div>
+                <div className="hero-card__actions">
                   {currentProperty ? (
                     <>
-                      {currentProperty.city} / ¥{currentProperty.monthlyRent.toLocaleString()}
+                      <button type="button" onClick={() => setIsLocked((current) => !current)}>
+                        {pickUi(locale, {
+                          ja: isLocked ? '解錠' : '施錠',
+                          en: isLocked ? 'Unlock' : 'Lock',
+                          zh: isLocked ? '解锁' : '上锁',
+                          ko: isLocked ? '잠금 해제' : '잠금',
+                        })}
+                      </button>
+                      <button type="button" className="danger-button" onClick={handleLeaveProperty}>
+                        {t('stayLeaveProperty')}
+                      </button>
                     </>
-                  ) : (
-                    t('stayHeroNoPropertySubtitle')
-                  )}
-                </p>
+                  ) : null}
+                </div>
               </div>
-              <div className="hero-card__badges">
-                <StatusBadge
-                  label={
-                    currentProperty ? t('stayStatusStaying') : t('stayStatusNoProperty')
-                  }
-                  tone={currentProperty ? 'success' : 'neutral'}
-                />
-                {currentProperty ? (
-                  <StatusBadge
-                    label={pickUi(locale, {
-                      ja: isLocked ? '施錠中' : '解錠中',
-                      en: isLocked ? 'Locked' : 'Unlocked',
-                      zh: isLocked ? '已上锁' : '已解锁',
-                      ko: isLocked ? '잠김' : '열림',
-                    })}
-                    tone={isLocked ? 'neutral' : 'success'}
-                  />
-                ) : null}
+
+              <div className="hero-card__footer">
+                <button
+                  type="button"
+                  className="danger-button"
+                  onClick={() => {
+                    if (window.confirm(t('stayCancelConfirm'))) {
+                      cancelEnrollment()
+                      navigate('/onboarding', { replace: true })
+                    }
+                  }}
+                >
+                  {t('stayCancelPlan')}
+                </button>
+              </div>
               </div>
             </div>
-
-            {currentProperty ? (
-              <div className="tag-row">
-                {currentProperty.features.slice(0, 4).map((feature) => (
-                  <span key={feature} className="info-tag">
-                    {localizeFeature(feature, locale)}
-                  </span>
-                ))}
-              </div>
-            ) : null}
-
-            <div className="hero-card__row">
-              <div className="hero-card__plan">
-                <strong>
-                  {localizeText(enrolledPlan.name, locale)} / {localizeText(enrolledPlan.stayRange, locale)}
-                </strong>
-                <p className="hero-card__meta">
-                  {t('onboardingMonthlyTotal')}: ¥{(enrolledPlan.monthlyPrice + optionsMonthlyTotal).toLocaleString()} ·{' '}
-                  {t('onboardingSelectedOptions')}: {snapshot?.selectedOptionIds.length ?? 0}
-                </p>
-              </div>
-              <div className="hero-card__actions">
-                {currentProperty ? (
-                  <>
-                    <button type="button" onClick={() => setIsLocked((current) => !current)}>
-                      {pickUi(locale, {
-                        ja: isLocked ? '解錠' : '施錠',
-                        en: isLocked ? 'Unlock' : 'Lock',
-                        zh: isLocked ? '解锁' : '上锁',
-                        ko: isLocked ? '잠금 해제' : '잠금',
-                      })}
-                    </button>
-                    <button type="button" className="danger-button" onClick={handleLeaveProperty}>
-                      {t('stayLeaveProperty')}
-                    </button>
-                  </>
-                ) : null}
-              </div>
-            </div>
-
-            <div className="hero-card__footer">
-              <button
-                type="button"
-                className="danger-button"
-                onClick={() => {
-                  if (window.confirm(t('stayCancelConfirm'))) {
-                    cancelEnrollment()
-                    navigate('/onboarding', { replace: true })
-                  }
-                }}
-              >
-                {t('stayCancelPlan')}
-              </button>
-            </div>
-          </div>
+          </>
         </SectionCard>
       ) : null}
 
@@ -228,38 +266,66 @@ export function StayDashboardPage() {
                     ? t('stayStatusOtherUser')
                     : t('stayStatusAvailable')
               const canPick = status === 'available' && !currentProperty
+              const coverSrc = property.coverImageUrl ?? ''
+              const showBusyOverlay = Boolean(coverSrc && status === 'other')
 
               return (
-                <article key={property.id} className="mini-card stay-plan-card">
+                <article
+                  key={property.id}
+                  className={`mini-card stay-plan-card${coverSrc ? ' stay-plan-card--with-photo' : ' stay-plan-card--no-photo'}${showBusyOverlay ? ' stay-plan-card--busy-overlay' : ''}`}
+                >
+                  {coverSrc ? (
+                    <div className="stay-plan-card__media-wrap">
+                      <MediaCover
+                        src={coverSrc}
+                        alt={property.name}
+                        aspectRatio="2.5 / 1"
+                        className="stay-plan-card__cover media-cover--plan-pick"
+                      />
+                      {showBusyOverlay ? (
+                        <div className="stay-plan-card__media-overlay" aria-hidden>
+                          <span className="stay-plan-card__media-overlay-label">
+                            {t('stayStatusOtherUser')}
+                          </span>
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
                   <span className={`stay-plan-card__status badge badge--${badgeTone}`}>
                     {statusLabel}
                   </span>
-                  <div>
-                    <strong>{property.name}</strong>
-                    <p style={{ margin: '4px 0 0' }}>
-                      {property.city} / ¥{property.monthlyRent.toLocaleString()}
-                    </p>
+                  <div className="stay-plan-card__inner">
+                    <div>
+                      <strong>{property.name}</strong>
+                      <p style={{ margin: '4px 0 0' }}>
+                        {property.city} / ¥{property.monthlyRent.toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="tag-row">
+                      {property.features.map((feature) => (
+                        <span key={feature} className="info-tag">
+                          {localizeFeature(feature, locale)}
+                        </span>
+                      ))}
+                    </div>
+                    {status === 'staying' ? (
+                      <button type="button" className="danger-button" onClick={handleLeaveProperty}>
+                        {t('stayLeaveProperty')}
+                      </button>
+                    ) : status === 'other' ? (
+                      <button type="button" disabled className="stay-plan-card__btn-occupied">
+                        {t('stayStatusStaying')}
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled={!canPick}
+                        onClick={() => handlePickProperty(property.id)}
+                      >
+                        {t('stayPickProperty')}
+                      </button>
+                    )}
                   </div>
-                  <div className="tag-row">
-                    {property.features.map((feature) => (
-                      <span key={feature} className="info-tag">
-                        {localizeFeature(feature, locale)}
-                      </span>
-                    ))}
-                  </div>
-                  {status === 'staying' ? (
-                    <button type="button" className="danger-button" onClick={handleLeaveProperty}>
-                      {t('stayLeaveProperty')}
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      disabled={!canPick}
-                      onClick={() => handlePickProperty(property.id)}
-                    >
-                      {t('stayPickProperty')}
-                    </button>
-                  )}
                 </article>
               )
             })}
@@ -340,7 +406,8 @@ export function StayDashboardPage() {
       ) : null}
 
       {showDetailSections && currentProperty ? (
-      <SectionCard title={t('troubleReportTitle')} description={t('troubleReportDescription')}>
+      <div className="page-section-cluster page-rhythm-loose">
+      <SectionCard tone="quiet" title={t('troubleReportTitle')} description={t('troubleReportDescription')}>
         <form
           className="stack"
           onSubmit={(event) => {
@@ -417,10 +484,8 @@ export function StayDashboardPage() {
           ) : null}
         </form>
       </SectionCard>
-      ) : null}
 
-      {showDetailSections && currentProperty ? (
-      <SectionCard title={t('supportTitle')} description={t('supportDescription')}>
+      <SectionCard tone="quiet" title={t('supportTitle')} description={t('supportDescription')}>
         <div className="stack">
           <div className="support-grid">
             <div className="mini-card">
@@ -516,6 +581,7 @@ export function StayDashboardPage() {
           ) : null}
         </div>
       </SectionCard>
+      </div>
       ) : null}
     </div>
   )
