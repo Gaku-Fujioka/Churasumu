@@ -31,6 +31,8 @@ export interface MockUser {
 export interface Property {
   id: string
   name: string
+  /** 一覧・ヒーロー用のカバー写真URL（モックではストック） */
+  coverImageUrl?: string
   area: string
   city: string
   monthlyRent: number
@@ -160,6 +162,7 @@ export interface FeedPost {
   type: FeedType
   title: LocalizedText
   description: LocalizedText
+  coverImageUrl?: string
   area: string
   createdAt: string
   likedByCurrentUser: boolean
@@ -168,6 +171,7 @@ export interface FeedPost {
 export interface Coupon {
   id: string
   shopName: string
+  coverImageUrl?: string
   category: CouponCategory
   area: string
   discountLabel: LocalizedText
@@ -191,6 +195,7 @@ export interface Review {
 export interface WorkSpot {
   id: string
   name: string
+  coverImageUrl?: string
   area: string
   wifi: 'fast' | 'stable' | 'basic'
   power: boolean

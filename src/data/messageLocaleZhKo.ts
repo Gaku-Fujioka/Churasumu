@@ -115,6 +115,14 @@ export const messageTranslationsZh: Record<string, string> = {
   stayHomeStripReviews: '评价',
   stayHomeStripWorkSpots: '工作空间',
   stayHomeStripSupport: '生活支持',
+  stayRhythmBannerEyebrow: '本页可',
+  stayRhythmBannerText:
+    '在此集中查看签约方案与住所、门锁、报修与延期。也可通过下方快捷方式前往社区与移居支持。',
+  communityHubKicker: '社区',
+  communityHubPriorityNavAria: '常用社区功能',
+  communityHubPreviewSectionTitle: '精选',
+  stayHeroCoverAltGeneric: '冲绳海滨意象图（请在下方列表选择住所）',
+  communityHubCoverAlt: '冲绳海岸与街区意象照片',
 }
 
 export const messageTranslationsKo: Record<string, string> = {
@@ -233,4 +241,12 @@ export const messageTranslationsKo: Record<string, string> = {
   stayHomeStripReviews: '후기',
   stayHomeStripWorkSpots: '작업 공간',
   stayHomeStripSupport: '생활 지원',
+  stayRhythmBannerEyebrow: '이 페이지에서',
+  stayRhythmBannerText:
+    '가입 플랜·거주지, 잠금, 문의·연장을 한곳에서 확인하세요. 아래 바로가기로 커뮤니티·이주 지원으로도 이동할 수 있습니다.',
+  communityHubKicker: '커뮤니티',
+  communityHubPriorityNavAria: '자주 쓰는 커뮤니티',
+  communityHubPreviewSectionTitle: '픽업',
+  stayHeroCoverAltGeneric: '오키나와 바다 이미지(아래 목록에서 거처 선택)',
+  communityHubCoverAlt: '오키나와 해안 풍경 이미지',
 }

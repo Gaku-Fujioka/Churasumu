@@ -1,9 +1,11 @@
 import type { FeedPost } from '../types/domain.ts'
+import { STOCK_PHOTOS } from './stockPhotos.ts'
 
 export const mockFeed: FeedPost[] = [
   {
     id: 'feed-1',
     type: 'food',
+    coverImageUrl: STOCK_PHOTOS.feedFood,
     title: { ja: '北谷の朝カフェ特集', en: 'Morning cafes in Chatan' },
     description: {
       ja: '朝から作業しやすいカフェを3件ピックアップしました。',
@@ -16,6 +18,7 @@ export const mockFeed: FeedPost[] = [
   {
     id: 'feed-2',
     type: 'event',
+    coverImageUrl: STOCK_PHOTOS.feedEvent,
     title: { ja: '今週の移住相談ミートアップ', en: 'This week’s relocation meetup' },
     description: {
       ja: '移住検討者向けの交流イベントが那覇で開催されます。',
@@ -28,6 +31,7 @@ export const mockFeed: FeedPost[] = [
   {
     id: 'feed-3',
     type: 'coworking',
+    coverImageUrl: STOCK_PHOTOS.feedCoworking,
     title: { ja: '沖縄市の新しいコワーキング', en: 'New coworking space in Okinawa City' },
     description: {
       ja: '通話ブースと高速回線つきの新施設がオープンしました。',

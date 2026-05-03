@@ -1,9 +1,11 @@
 import type { WorkSpot } from '../types/domain.ts'
+import { STOCK_PHOTOS } from './stockPhotos.ts'
 
 export const mockWorkSpots: WorkSpot[] = [
   {
     id: 'work-1',
     name: 'Koza Desk Cafe',
+    coverImageUrl: STOCK_PHOTOS.workKoza,
     area: '沖縄市',
     wifi: 'fast',
     power: true,
@@ -18,6 +20,7 @@ export const mockWorkSpots: WorkSpot[] = [
   {
     id: 'work-2',
     name: 'Harbor Coworking',
+    coverImageUrl: STOCK_PHOTOS.workHarbor,
     area: '北谷町',
     wifi: 'stable',
     power: true,

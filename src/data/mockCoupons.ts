@@ -1,9 +1,11 @@
 import type { Coupon } from '../types/domain.ts'
+import { STOCK_PHOTOS } from './stockPhotos.ts'
 
 export const mockCoupons: Coupon[] = [
   {
     id: 'coupon-1',
     shopName: 'Seaside Coffee',
+    coverImageUrl: STOCK_PHOTOS.couponCoffee,
     category: 'food',
     area: '北谷町',
     discountLabel: { ja: 'ドリンク10%OFF', en: '10% off drinks' },
@@ -18,6 +20,7 @@ export const mockCoupons: Coupon[] = [
   {
     id: 'coupon-2',
     shopName: 'Naha Bike Share',
+    coverImageUrl: STOCK_PHOTOS.couponBike,
     category: 'activity',
     area: '那覇市',
     discountLabel: { ja: '初回利用30分無料', en: 'First 30 minutes free' },
