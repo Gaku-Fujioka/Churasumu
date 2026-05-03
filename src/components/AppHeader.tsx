@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import { LOCALE_NATIVE_NAMES, languagePickerCollapsedSummary } from '../lib/languagePicker.ts'
 import { useLocale } from '../hooks/useLocale.ts'
@@ -11,73 +11,68 @@ export function AppHeader() {
   const { currentUser, logout } = useAuth()
   const { locale, setLocale, t } = useLocale()
   const languageDetailsRef = useRef<HTMLDetailsElement>(null)
-  const isAdmin = currentUser?.role === 'admin'
-  const residentLinks = [
-    { to: '/onboarding', label: t('navOnboarding') },
-    { to: '/stay', label: t('navStay') },
-    { to: '/chat', label: t('navChat') },
-    { to: '/community', label: t('navCommunity') },
-    { to: '/migration', label: t('navMigration') },
-  ]
+
+  const userLabel = useMemo(() => {
+    if (!currentUser) {
+      return t('loggedOut')
+    }
+    return `${currentUser.name} / ${currentUser.stayPurpose}`
+  }, [currentUser, t])
 
   return (
     <header className="app-header">
       <div className="app-header__brand">
         <p className="eyebrow">{t('appTagline')}</p>
-        <h1>Churasumu</h1>
+        <NavLink to="/" className="app-header__title">
+          Churasumu
+        </NavLink>
       </div>
 
-      <nav
-        className="app-nav"
-        aria-label={isAdmin ? 'Administrator navigation' : 'Main navigation'}
-      >
-        {isAdmin ? (
-          <NavLink
-            to="/admin"
-            className={({ isActive }) => (isActive ? 'nav-link nav-link--active' : 'nav-link')}
-          >
-            {t('navAdmin')}
-          </NavLink>
-        ) : (
-          residentLinks.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) => (isActive ? 'nav-link nav-link--active' : 'nav-link')}
-            >
-              {link.label}
-            </NavLink>
-          ))
-        )}
-      </nav>
-
-      <div className="app-header__meta">
-        <details ref={languageDetailsRef} className="language-picker">
-          <summary className="language-picker__summary">
-            {languagePickerCollapsedSummary(locale, locale)}
+      <div className="app-header__right">
+        <details ref={languageDetailsRef} className="account-menu">
+          <summary className="account-menu__summary" aria-label="Account menu">
+            <span className="account-menu__avatar" aria-hidden="true">
+              {currentUser?.name?.slice(0, 1).toUpperCase() ?? 'U'}
+            </span>
           </summary>
-          <div className="language-picker__panel">
-            {localeOrder.map((code) => (
-              <button
-                key={code}
-                type="button"
-                className={locale === code ? 'choice-pill choice-pill--active' : 'choice-pill'}
-                onClick={() => {
-                  setLocale(code)
-                  languageDetailsRef.current?.removeAttribute('open')
-                }}
-              >
-                {LOCALE_NATIVE_NAMES[code]}
-              </button>
-            ))}
+          <div className="account-menu__panel">
+            <p className="account-menu__user">{userLabel}</p>
+            {currentUser?.role === 'admin' ? (
+              <NavLink to="/admin" className="account-menu__link">
+                {t('navAdmin')}
+              </NavLink>
+            ) : (
+              <NavLink to="/onboarding" className="account-menu__link">
+                {t('navOnboarding')}
+              </NavLink>
+            )}
+
+            <div className="account-menu__divider" />
+
+            <p className="account-menu__section">{languagePickerCollapsedSummary(locale, locale)}</p>
+            <div className="account-menu__languages">
+              {localeOrder.map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  className={locale === code ? 'choice-pill choice-pill--active' : 'choice-pill'}
+                  onClick={() => {
+                    setLocale(code)
+                    languageDetailsRef.current?.removeAttribute('open')
+                  }}
+                >
+                  {LOCALE_NATIVE_NAMES[code]}
+                </button>
+              ))}
+            </div>
+
+            <div className="account-menu__divider" />
+
+            <button type="button" className="ghost-button account-menu__logout" onClick={logout}>
+              {t('logout')}
+            </button>
           </div>
         </details>
-        <p className="app-header__user-line">
-          {currentUser ? `${currentUser.name} / ${currentUser.stayPurpose}` : t('loggedOut')}
-        </p>
-        <button type="button" className="ghost-button" onClick={logout}>
-          {t('logout')}
-        </button>
       </div>
     </header>
   )

@@ -1,0 +1,123 @@
+/* 淡い沖縄のリーフ・シャロウウォーターをイメージしたパレット */
+.page-transition-root {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: auto;
+  cursor: progress;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.page-transition-wave {
+  --pt-crest: #d2f3f2;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    168deg,
+    #e0f6f4 0%,
+    #caeef2 28%,
+    #b8e5ea 55%,
+    #a8dae3 100%
+  );
+}
+
+.page-transition-wave__stack {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.page-transition-wave__svg {
+  width: 140%;
+  min-height: 62%;
+  margin-left: -20%;
+  flex-shrink: 0;
+  transform: translateY(110%);
+  animation: page-transition-wave-rise 680ms cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+.page-transition-wave__path--back {
+  fill: rgba(142, 205, 218, 0.42);
+}
+
+.page-transition-wave__path--mid {
+  fill: rgba(168, 220, 232, 0.52);
+}
+
+.page-transition-wave__path--front {
+  fill: var(--pt-crest);
+  filter: drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.35));
+}
+
+.page-transition-wave__svg--mid {
+  opacity: 0.88;
+  animation-delay: 45ms;
+}
+
+.page-transition-wave__svg--front {
+  opacity: 0.95;
+  margin-top: -18%;
+  animation-duration: 720ms;
+}
+
+.page-transition-root--wave.page-transition-root--exit .page-transition-wave__svg {
+  animation: none;
+  transform: translateY(0);
+}
+
+.page-transition-root--wave.page-transition-root--exit .page-transition-wave {
+  animation: page-transition-fade-out 420ms ease forwards;
+}
+
+@keyframes page-transition-wave-rise {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-transition-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ダークテーマ時も、鮮やかすぎないトーンの沖縄近海風 */
+@media (prefers-color-scheme: dark) {
+  .page-transition-wave {
+    --pt-crest: #7eb8c4;
+    background: linear-gradient(
+      168deg,
+      #1a3a40 0%,
+      #234e56 40%,
+      #2c5f68 100%
+    );
+  }
+
+  .page-transition-wave__path--back {
+    fill: rgba(90, 160, 175, 0.45);
+  }
+
+  .page-transition-wave__path--mid {
+    fill: rgba(110, 190, 205, 0.5);
+  }
+
+  .page-transition-wave__path--front {
+    filter: drop-shadow(0 -1px 0 rgba(255, 255, 255, 0.12));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition-wave__svg {
+    animation-duration: 1ms;
+    transform: translateY(0);
+  }
+
+  .page-transition-root--wave.page-transition-root--exit .page-transition-wave {
+    animation-duration: 1ms;
+  }
+}

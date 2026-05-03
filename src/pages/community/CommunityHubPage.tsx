@@ -18,7 +18,7 @@ export function CommunityHubPage() {
   const { t } = useLocale()
 
   return (
-    <div className="page-grid">
+    <>
       <SectionCard title={t('communityHubTitle')} description={t('communityHubDescription')}>
         <div className="support-grid">
           <div className="mini-card">
@@ -92,6 +92,6 @@ export function CommunityHubPage() {
           ))}
         </div>
       </SectionCard>
-    </div>
+    </>
   )
 }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { PropertyCard } from '../../components/PropertyCard.tsx'
 import { SectionCard } from '../../components/SectionCard.tsx'
 import { StatusBadge } from '../../components/StatusBadge.tsx'
@@ -9,6 +9,7 @@ import { mockOptions, mockPlans, recommendationQuestions } from '../../data/mock
 import { useAuth } from '../../hooks/useAuth.ts'
 import { useEnrollment } from '../../hooks/useEnrollment.ts'
 import { useLocale } from '../../hooks/useLocale.ts'
+import { usePageTransition } from '../../hooks/usePageTransition.ts'
 import { usePlanRecommendation } from '../../hooks/usePlanRecommendation.ts'
 import { pickUi } from '../../lib/pickUi.ts'
 import type { EnrollmentSnapshot } from '../../types/enrollment.ts'
@@ -19,6 +20,8 @@ export function OnboardingPage() {
   const { currentUser } = useAuth()
   const { snapshot, patchSnapshot } = useEnrollment()
   const { locale, t } = useLocale()
+  const navigate = useNavigate()
+  const { runPageTransition } = usePageTransition()
   const [answers, setAnswers] = useState<AnswerMap>({})
   const [favoritePropertyIds, setFavoritePropertyIds] = useState<string[]>(
     mockFavoriteProperties.map((item) => item.propertyId),
@@ -48,6 +51,13 @@ export function OnboardingPage() {
     }
     patchSnapshot(updates)
   }, [allQuestionsAnswered, patchSnapshot, recommendedPlan.id, snapshot, suggestedOptionsKey])
+
+  useEffect(() => {
+    if (!snapshot?.isCheckoutComplete) {
+      return
+    }
+    navigate('/stay', { replace: true })
+  }, [navigate, snapshot?.isCheckoutComplete])
 
   const activeOptionIds = useMemo(() => {
     if (!allQuestionsAnswered || !snapshot) {
@@ -251,9 +261,14 @@ export function OnboardingPage() {
                 type="button"
                 disabled={flowLocked || !snapshot.hasViewedContract || snapshot.isCheckoutComplete}
                 onClick={() =>
-                  patchSnapshot({
-                    isCheckoutComplete: true,
-                    contractedPropertyId: null,
+                  void runPageTransition({
+                    onCovered: () => {
+                      patchSnapshot({
+                        isCheckoutComplete: true,
+                        contractedPropertyId: null,
+                      })
+                      navigate('/stay', { replace: true })
+                    },
                   })
                 }
               >

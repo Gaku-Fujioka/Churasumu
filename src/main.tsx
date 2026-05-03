@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext.tsx'
 import { EnrollmentProvider } from './context/EnrollmentContext.tsx'
 import { LocaleProvider } from './context/LocaleContext.tsx'
+import { PageTransitionProvider } from './context/PageTransitionContext.tsx'
 import './index.css'
 import App from './App.tsx'
 
@@ -13,7 +14,9 @@ createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <EnrollmentProvider>
           <LocaleProvider>
-            <App />
+            <PageTransitionProvider>
+              <App />
+            </PageTransitionProvider>
           </LocaleProvider>
         </EnrollmentProvider>
       </AuthProvider>

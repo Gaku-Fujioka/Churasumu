@@ -10,7 +10,7 @@ export function LoginPage() {
   const location = useLocation()
 
   if (currentUser) {
-    return <Navigate to="/onboarding" replace />
+    return <Navigate to="/" replace />
   }
 
   const from = (location.state as { from?: { pathname?: string } } | undefined)?.from?.pathname
@@ -29,7 +29,7 @@ export function LoginPage() {
               className="select-card"
               onClick={() => {
                 loginAs(user.id)
-                navigate(from ?? (user.role === 'admin' ? '/admin' : '/onboarding'))
+                navigate(from ?? '/')
               }}
             >
               <strong>{user.name}</strong>

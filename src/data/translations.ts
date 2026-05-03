@@ -80,6 +80,15 @@ export const messages = {
     ja: 'まだ家を選んでいません。下の「プラン対象の家」から空きの家を1件選んで入居してください。',
     en: 'No home selected yet. Pick an available home below to move in.',
   },
+  stayHeroNoPropertyTitle: {
+    ja: '入居する家を選んでください',
+    en: 'Choose a home to move into',
+  },
+  stayHeroNoPropertySubtitle: {
+    ja: 'プラン対象の家の一覧は下にあります。空きの家を選ぶと、ここに反映されます。',
+    en: 'Available homes for your plan are listed below. Your choice will appear here.',
+  },
+  stayStatusNoProperty: { ja: '家未決定', en: 'No home yet' },
   stayCancelPlan: { ja: '解約する', en: 'Cancel contract' },
   stayCancelConfirm: {
     ja: '解約すると契約情報がリセットされ、プラン選択からやり直しになります。よろしいですか？',
@@ -189,6 +198,18 @@ export const messages = {
     ja: '沖縄移住後に役立つ行政・学校・医療・交通情報を確認できます。',
     en: 'Browse key administration, school, medical, and transport information after moving.',
   },
+  stayHomeQuickNavAria: { ja: '主要メニュー', en: 'Main shortcuts' },
+  stayHomeQuickStay: { ja: '滞在', en: 'Stay' },
+  stayHomeQuickCommunity: { ja: 'コミュニティ', en: 'Community' },
+  stayHomeQuickMigration: { ja: '移住', en: 'Move' },
+  stayHomeQuickChat: { ja: 'AI チャット', en: 'AI chat' },
+  stayHomeQuickCoupons: { ja: 'クーポン', en: 'Coupons' },
+  stayHomeStripConsult: { ja: '相談', en: 'Consult' },
+  stayHomeStripFavorites: { ja: 'お気に入り', en: 'Saved' },
+  stayHomeStripFeed: { ja: '地域情報', en: 'Local' },
+  stayHomeStripReviews: { ja: '口コミ', en: 'Reviews' },
+  stayHomeStripWorkSpots: { ja: '作業スポット', en: 'Work' },
+  stayHomeStripSupport: { ja: '生活支援', en: 'Support' },
 } as const
 
 export type TranslationKey = keyof typeof messages

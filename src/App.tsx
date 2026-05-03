@@ -2,8 +2,10 @@ import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import './App.css'
 import { AppLayout } from './components/AppLayout.tsx'
 import { useAuth } from './hooks/useAuth.ts'
+import { useEnrollment } from './hooks/useEnrollment.ts'
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage.tsx'
 import { CommunityHubPage } from './pages/community/CommunityHubPage.tsx'
+import { CommunityLayoutPage } from './pages/community/CommunityLayoutPage.tsx'
 import { CouponsPage } from './pages/community/CouponsPage.tsx'
 import { LocalFeedPage } from './pages/community/LocalFeedPage.tsx'
 import { QuestionsPage } from './pages/community/QuestionsPage.tsx'
@@ -14,6 +16,7 @@ import { LoginPage } from './pages/LoginPage.tsx'
 import { ConsultationPage } from './pages/migration/ConsultationPage.tsx'
 import { FavoritePropertiesPage } from './pages/migration/FavoritePropertiesPage.tsx'
 import { MigrationHubPage } from './pages/migration/MigrationHubPage.tsx'
+import { MigrationLayoutPage } from './pages/migration/MigrationLayoutPage.tsx'
 import { PurchaseSimulatorPage } from './pages/migration/PurchaseSimulatorPage.tsx'
 import { RentalSwitchPage } from './pages/migration/RentalSwitchPage.tsx'
 import { SupportInfoPage } from './pages/migration/SupportInfoPage.tsx'
@@ -36,7 +39,14 @@ function RequireAuth() {
 
 function HomeRedirect() {
   const { currentUser } = useAuth()
-  return <Navigate to={currentUser?.role === 'admin' ? '/admin' : '/onboarding'} replace />
+  const { snapshot } = useEnrollment()
+
+  if (currentUser?.role === 'admin') {
+    return <Navigate to="/admin" replace />
+  }
+
+  const hasCompletedOnboarding = Boolean(snapshot?.hasViewedContract && snapshot?.isCheckoutComplete)
+  return <Navigate to={hasCompletedOnboarding ? '/stay' : '/onboarding'} replace />
 }
 
 function ResidentOnly() {
@@ -61,19 +71,23 @@ function App() {
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/stay" element={<StayDashboardPage />} />
             <Route path="/chat" element={<ChatbotPage />} />
-            <Route path="/community" element={<CommunityHubPage />} />
-            <Route path="/community/residents" element={<ResidentListPage />} />
-            <Route path="/community/questions" element={<QuestionsPage />} />
-            <Route path="/community/feed" element={<LocalFeedPage />} />
-            <Route path="/community/coupons" element={<CouponsPage />} />
-            <Route path="/community/reviews" element={<ReviewsPage />} />
-            <Route path="/community/work-spots" element={<WorkSpotsPage />} />
-            <Route path="/migration" element={<MigrationHubPage />} />
-            <Route path="/migration/consultation" element={<ConsultationPage />} />
-            <Route path="/migration/simulator" element={<PurchaseSimulatorPage />} />
-            <Route path="/migration/favorites" element={<FavoritePropertiesPage />} />
-            <Route path="/migration/rental-switch" element={<RentalSwitchPage />} />
-            <Route path="/migration/support" element={<SupportInfoPage />} />
+            <Route path="/community" element={<CommunityLayoutPage />}>
+              <Route index element={<CommunityHubPage />} />
+              <Route path="residents" element={<ResidentListPage />} />
+              <Route path="questions" element={<QuestionsPage />} />
+              <Route path="feed" element={<LocalFeedPage />} />
+              <Route path="coupons" element={<CouponsPage />} />
+              <Route path="reviews" element={<ReviewsPage />} />
+              <Route path="work-spots" element={<WorkSpotsPage />} />
+            </Route>
+            <Route path="/migration" element={<MigrationLayoutPage />}>
+              <Route index element={<MigrationHubPage />} />
+              <Route path="consultation" element={<ConsultationPage />} />
+              <Route path="simulator" element={<PurchaseSimulatorPage />} />
+              <Route path="favorites" element={<FavoritePropertiesPage />} />
+              <Route path="rental-switch" element={<RentalSwitchPage />} />
+              <Route path="support" element={<SupportInfoPage />} />
+            </Route>
           </Route>
         </Route>
       </Route>
